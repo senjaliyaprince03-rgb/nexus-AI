@@ -297,7 +297,7 @@ export function LoginPage() {
       {/* Right side: Premium Login Form */}
       <div className="login-auth-bg w-full lg:w-1/2 flex items-center justify-center overflow-y-auto p-4 py-5 sm:p-6 lg:p-7 xl:p-8 relative">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(245,158,11,0.16),transparent_32%),radial-gradient(circle_at_88%_22%,rgba(124,182,158,0.13),transparent_28%),linear-gradient(135deg,#fffaf7_0%,#fff_38%,#f8fbf8_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(212,175,55,0.16),transparent_32%),radial-gradient(circle_at_88%_22%,rgba(124,182,158,0.13),transparent_28%),linear-gradient(135deg,#fffaf7_0%,#fff_38%,#f8fbf8_100%)]" />
           <div className="login-grid absolute inset-0 opacity-[0.42]" />
           <div className="login-orb login-orb-one" />
           <div className="login-orb login-orb-two" />
@@ -315,7 +315,7 @@ export function LoginPage() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="flex items-center gap-3 mb-4 pl-1"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#FF8F5E] shadow-[0_8px_16px_rgba(245,158,11,0.25)] flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#FF8F5E] shadow-[0_8px_16px_rgba(212,175,55,0.25)] flex items-center justify-center text-white">
               <LogoMark className="w-5 h-5 rounded-md shadow-none" />
             </div>
             <span className="font-display font-bold text-[#18181B] tracking-tight text-2xl">
@@ -350,7 +350,7 @@ export function LoginPage() {
                   <button
                     type="button"
                     onClick={() => void probeBackend()}
-                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#FFB893] bg-white px-3 py-1.5 text-sm font-semibold text-[#A07D3A] transition hover:bg-[#FFF0EB]"
+                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#FFB893] bg-white px-3 py-1.5 text-sm font-semibold text-[#A07D3A] transition hover:bg-[rgba(212,175,55,0.08)]"
                   >
                     Retry connection
                   </button>
@@ -531,3 +531,4 @@ function isOfflineAuthError(error: unknown) {
 
   return /unavailable|offline|cannot reach|failed to fetch/i.test(detail)
 }
+

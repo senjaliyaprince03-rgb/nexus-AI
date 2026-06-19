@@ -125,7 +125,7 @@ export default function SettingsPage() {
       {/* Billing quick-link card */}
       <Link
         href="/dashboard/billing"
-        className="mb-6 flex items-center justify-between gap-4 bg-gradient-to-r from-[#FFF0EB] to-[#FFF9F6] dark:from-[#C5A059]/10 dark:to-[#C5A059]/5 border border-[rgba(255,107,53,0.18)] rounded-2xl px-5 py-4 hover:shadow-[0_4px_20px_rgba(255,107,53,0.1)] transition-all duration-200 group max-w-xl"
+        className="mb-6 flex items-center justify-between gap-4 bg-gradient-to-r from-[rgba(212,175,55,0.08)] to-[rgba(212,175,55,0.04)] dark:from-[#C5A059]/10 dark:to-[#C5A059]/5 border border-[rgba(255,107,53,0.18)] rounded-2xl px-5 py-4 hover:shadow-[0_4px_20px_rgba(255,107,53,0.1)] transition-all duration-200 group max-w-xl"
       >
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-[#C5A059]/10 flex items-center justify-center">
@@ -231,7 +231,7 @@ export default function SettingsPage() {
                   <button 
                     onClick={() => setup2FA.mutate()}
                     disabled={setup2FA.isPending}
-                    className="text-xs font-semibold text-[#C5A059] hover:text-[#FF8C35] transition-colors bg-[#FFF0EB] px-3 py-1.5 rounded-full"
+                    className="text-xs font-semibold text-[#C5A059] hover:text-[#FF8C35] transition-colors bg-[rgba(212,175,55,0.08)] px-3 py-1.5 rounded-full"
                   >
                     {setup2FA.isPending ? "Setting up..." : "Enable"}
                   </button>
@@ -433,3 +433,4 @@ function Field({ label, hint, ...props }: React.InputHTMLAttributes<HTMLInputEle
     </div>
   )
 }
+

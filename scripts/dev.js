@@ -49,6 +49,10 @@ function killPort(port) {
 const ALL_PORTS = [8000, 3001, 8501, 12000, 12001, 8002, 3002, 8085, 8081];
 ALL_PORTS.forEach(port => killPort(port));
 
+// Give the OS a moment to release the ports after killing
+const { execSync: syncExec } = require('child_process');
+try { syncExec(isWindows ? 'timeout /t 1 /nobreak >nul' : 'sleep 1', { stdio: 'ignore' }); } catch (e) { /* ignore */ }
+
 // ──────────────────────────────────────────────────────────────
 // 3. Locate the Python interpreter from the backend venv
 // ──────────────────────────────────────────────────────────────
@@ -109,6 +113,11 @@ const backendProcess = spawn(
     windowsHide: true
   }
 );
+
+backendProcess.on('error', (err) => {
+  const logFile = path.join(rootDir, 'background_services.log');
+  fs.appendFileSync(logFile, `[Backend] SPAWN ERROR: ${err.message}\n`);
+});
 
 logStream(backendProcess.stdout);
 logStream(backendProcess.stderr);
@@ -262,11 +271,38 @@ function cleanup() {
 process.on('SIGINT', () => { cleanup(); process.exit(); });
 process.on('SIGTERM', () => { cleanup(); process.exit(); });
 
+let backendHealthy = false;
+
 backendProcess.on('close', (code) => {
   if (!isCleaningUp) {
-    console.log(`Backend process exited with code ${code}`);
-    cleanup();
-    setTimeout(() => process.exit(code || 0), 200);
+    // If the backend was healthy (health check passed) and then exits,
+    // attempt an automatic restart instead of killing everything.
+    if (backendHealthy) {
+      console.log(`Backend exited (code ${code}). Restarting...`);
+      const restartedBackend = spawn(
+        pythonCmd,
+        ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000'],
+        {
+          cwd: backendDir,
+          env: { ...process.env, USE_MONGO_MOCK: 'true', PYTHONUNBUFFERED: '1' },
+          shell: false,
+          windowsHide: true
+        }
+      );
+      logStream(restartedBackend.stdout);
+      logStream(restartedBackend.stderr);
+      restartedBackend.on('close', (c) => {
+        if (!isCleaningUp) {
+          console.log(`Backend restart also exited (code ${c}). Giving up.`);
+          cleanup();
+          setTimeout(() => process.exit(c || 0), 200);
+        }
+      });
+    } else {
+      console.log(`Backend process exited with code ${code}`);
+      cleanup();
+      setTimeout(() => process.exit(code || 0), 200);
+    }
   }
 });
 
@@ -317,6 +353,7 @@ function pollBackendHealth(retries = 120) {
 
   http.get('http://127.0.0.1:8000/health', (res) => {
     if (res.statusCode === 200) {
+      backendHealthy = true;
       startFrontendServer();
     } else {
       setTimeout(() => pollBackendHealth(retries - 1), 500);

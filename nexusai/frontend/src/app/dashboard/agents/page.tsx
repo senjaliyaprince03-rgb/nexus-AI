@@ -228,7 +228,7 @@ export default function AgentsPage() {
                 className={cn(
                   "w-full rounded-2xl border p-4 text-left transition-all",
                   active
-                    ? "border-[#C5A059]/30 bg-[#FFF0EB] dark:bg-[#C5A059]/12 shadow-[0_18px_42px_rgba(255,107,53,0.12)]"
+                    ? "border-[#C5A059]/30 bg-[rgba(212,175,55,0.08)] dark:bg-[#C5A059]/12 shadow-[0_18px_42px_rgba(255,107,53,0.12)]"
                     : "border-[rgba(0,0,0,0.06)] dark:border-[#F8F9FA]/8 bg-white dark:bg-[#111827] shadow-sm hover:-translate-y-0.5 hover:border-[#DADADA] dark:hover:border-[#F8F9FA]/16",
                 )}
               >
@@ -260,7 +260,7 @@ export default function AgentsPage() {
           <section className="dashboard-panel relative p-6">
             <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 rounded-bl-full bg-gradient-to-bl from-[#C5A059]/7 to-transparent" />
             <div className="relative z-10 mb-5 flex items-start gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#C5A059]/20 bg-[#FFF0EB] dark:bg-[#C5A059]/10 text-[#C5A059]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#C5A059]/20 bg-[rgba(212,175,55,0.08)] dark:bg-[#C5A059]/10 text-[#C5A059]">
                 <SelectedIcon className="h-6 w-6" />
               </div>
               <div>
@@ -290,7 +290,7 @@ export default function AgentsPage() {
             </div>
 
             {error && (
-              <div className="relative z-10 mt-4 rounded-2xl border border-[#FFD7C7] dark:border-[#7A2D16] bg-[#FFF0EB] dark:bg-[#3B1812] px-4 py-3 text-sm font-medium text-[#A07D3A] dark:text-[#FFB4A0]">
+              <div className="relative z-10 mt-4 rounded-2xl border border-[#FFD7C7] dark:border-[#7A2D16] bg-[rgba(212,175,55,0.08)] dark:bg-[#3B1812] px-4 py-3 text-sm font-medium text-[#A07D3A] dark:text-[#FFB4A0]">
                 {error}
               </div>
             )}
@@ -399,3 +399,4 @@ export default function AgentsPage() {
     </div>
   )
 }
+

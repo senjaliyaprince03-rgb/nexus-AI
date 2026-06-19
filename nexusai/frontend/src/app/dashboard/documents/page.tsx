@@ -123,7 +123,7 @@ export default function DocumentsPage() {
 
         {!isLoading && !data?.items.length && !dragOver && (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-3xl border border-[#C5A059]/20 bg-[#FFF0EB] text-[#C5A059]">
+            <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-3xl border border-[#C5A059]/20 bg-[rgba(212,175,55,0.08)] text-[#C5A059]">
               <FileStack className="h-8 w-8" />
             </div>
             <p className="mb-2 text-lg font-display text-[#18181B] dark:text-[#F8F9FA]">No documents yet</p>
@@ -150,3 +150,4 @@ export default function DocumentsPage() {
     </div>
   )
 }
+

@@ -151,7 +151,7 @@ function VerifyEmailContent() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="mb-7 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#FFE1D4] bg-[#FFF0EB] shadow-[0_18px_44px_rgba(255,107,53,0.14)]">
+            <div className="mb-7 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#FFE1D4] bg-[rgba(212,175,55,0.08)] shadow-[0_18px_44px_rgba(255,107,53,0.14)]">
               {icon}
             </div>
             <h1 className="mb-3 font-display text-[40px] font-bold leading-tight tracking-tight text-[#18181B]">
@@ -186,7 +186,7 @@ function VerifyEmailContent() {
               <button
                 type="button"
                 onClick={() => void backend.retry()}
-                className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#FFB893] bg-white px-3 py-1.5 text-xs font-semibold text-[#A07D3A] transition hover:bg-[#FFF0EB]"
+                className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#FFB893] bg-white px-3 py-1.5 text-xs font-semibold text-[#A07D3A] transition hover:bg-[rgba(212,175,55,0.08)]"
               >
                 Retry connection
               </button>
@@ -237,3 +237,4 @@ export default function VerifyEmailPage() {
     </Suspense>
   );
 }
+

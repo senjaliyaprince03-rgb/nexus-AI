@@ -89,7 +89,7 @@ export default function PrivacyPolicyPage() {
                       href={`#${id}`}
                       className={`block text-[13px] py-1.5 px-3 rounded-lg transition-all duration-200 ${
                         activeSection === id
-                          ? "text-[#C5A059] bg-[#FFF0EB] dark:bg-[#C5A059]/10 font-medium"
+                          ? "text-[#C5A059] bg-[rgba(212,175,55,0.08)] dark:bg-[#C5A059]/10 font-medium"
                           : "text-[#4B5563] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-[#F8F9FA] hover:bg-[#F8F7F4] dark:hover:bg-[#18181A]"
                       }`}
                     >
@@ -593,3 +593,4 @@ function SectionBody({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
+

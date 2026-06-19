@@ -207,7 +207,7 @@ function SystemNode({ node, index }: { node: TopologySystem & { x: number; y: nu
         </mesh>
         <Html transform distanceFactor={9.5} center pointerEvents="none" position={[0.02, 0.02, 0.12]}>
           <div className="flex min-w-[7.8rem] items-center gap-2 rounded-[18px] border border-[#F8F9FA]/72 bg-white/92 px-3 py-2 shadow-[0_14px_32px_rgba(15,15,15,0.12)] backdrop-blur-xl">
-            <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#FFF0EB] text-[#C5A059] shadow-sm">
+            <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[rgba(212,175,55,0.08)] text-[#C5A059] shadow-sm">
               <Icon className="h-[14px] w-[14px]" />
             </div>
             <div className="min-w-0">
@@ -252,7 +252,7 @@ function TopologyFallback({ systems }: { systems: TopologySystem[] }) {
             }}
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF0EB] text-[#C5A059] shadow-sm">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(212,175,55,0.08)] text-[#C5A059] shadow-sm">
                 <Icon className="h-4 w-4" />
               </div>
               <div className="min-w-0">
@@ -311,3 +311,4 @@ function statusLabel(status: string) {
   if (status === "framework") return "Framework"
   return "Checking"
 }
+

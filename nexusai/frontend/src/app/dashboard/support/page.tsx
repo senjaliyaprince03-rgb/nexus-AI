@@ -147,7 +147,7 @@ function PremiumSignal({
   return (
     <div className="rounded-[28px] border border-black/5 dark:border-[#F8F9FA]/8 bg-white/82 dark:bg-[#0F172A]/84 p-4 shadow-[0_18px_58px_rgba(10,10,10,0.08)] backdrop-blur-xl">
       <div className="flex items-start gap-3">
-        <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-[#FFF0EB] dark:bg-[#C5A059]/10 text-[#C5A059]">
+        <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-[rgba(212,175,55,0.08)] dark:bg-[#C5A059]/10 text-[#C5A059]">
           <Icon className="h-5 w-5" />
         </span>
         <div>
@@ -158,3 +158,4 @@ function PremiumSignal({
     </div>
   )
 }
+

@@ -76,7 +76,7 @@ export function SupportChatPanel({
                 className={cn(
                   "flex min-h-[66px] items-start gap-2 rounded-2xl border px-3 py-3 text-left transition-all",
                   active
-                    ? "border-[#C5A059]/35 bg-[#FFF0EB] dark:bg-[#1A2434] text-[#18181B] dark:text-[#F8F9FA] shadow-[0_12px_34px_rgba(255,107,53,0.14)]"
+                    ? "border-[#C5A059]/35 bg-[rgba(212,175,55,0.08)] dark:bg-[#1A2434] text-[#18181B] dark:text-[#F8F9FA] shadow-[0_12px_34px_rgba(255,107,53,0.14)]"
                     : "border-black/5 dark:border-[#F8F9FA]/8 bg-white/72 dark:bg-white/5 text-[#4B5563] dark:text-[#D1D5DB] hover:border-[#7CB69E]/35 hover:bg-[#F7FBF9] dark:hover:bg-[#101926]",
                 )}
               >
@@ -215,7 +215,7 @@ function SupportMessage({ message, compact }: { message: ChatMessage; compact: b
         )}
       </div>
       {isUser && (
-        <div className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-2xl bg-[#FFF0EB] text-[#C5A059]">
+        <div className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-2xl bg-[rgba(212,175,55,0.08)] text-[#C5A059]">
           <User className="h-4 w-4" />
         </div>
       )}
@@ -274,7 +274,7 @@ function FeedbackButtons({ message }: { message: ChatMessage }) {
       <button
         onClick={() => submitFeedback("down")}
         disabled={sent != null}
-        className={cn("rounded-full p-1.5 text-[#9CA3AF] transition hover:text-[#D14E2C]", sent === "down" && "bg-[#FFF0EB] text-[#D14E2C]")}
+        className={cn("rounded-full p-1.5 text-[#9CA3AF] transition hover:text-[#D14E2C]", sent === "down" && "bg-[rgba(212,175,55,0.08)] text-[#D14E2C]")}
         aria-label="Rate support answer not helpful"
       >
         <ThumbsDown className="h-3.5 w-3.5" />
@@ -282,3 +282,4 @@ function FeedbackButtons({ message }: { message: ChatMessage }) {
     </div>
   )
 }
+

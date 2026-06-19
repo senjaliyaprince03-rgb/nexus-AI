@@ -25,7 +25,7 @@ export default function GlobalError({
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#C5A059] to-[#FF8C35]" />
         
-        <div className="w-16 h-16 mx-auto bg-[#FFF0EB] text-[#C5A059] rounded-2xl flex items-center justify-center mb-6">
+        <div className="w-16 h-16 mx-auto bg-[rgba(212,175,55,0.08)] text-[#C5A059] rounded-2xl flex items-center justify-center mb-6">
           <AlertCircle className="w-8 h-8" />
         </div>
         
@@ -48,3 +48,4 @@ export default function GlobalError({
     </div>
   )
 }
+

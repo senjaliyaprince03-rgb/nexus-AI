@@ -44,7 +44,7 @@ export function CookieBanner() {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#C5A059] to-[#FFA382]" />
           
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-[#FFF0EB] text-[#C5A059] flex items-center justify-center flex-shrink-0 mt-1">
+            <div className="w-10 h-10 rounded-full bg-[rgba(212,175,55,0.08)] text-[#C5A059] flex items-center justify-center flex-shrink-0 mt-1">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -88,3 +88,4 @@ export function CookieBanner() {
     </AnimatePresence>
   )
 }
+

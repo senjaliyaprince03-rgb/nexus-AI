@@ -31,7 +31,7 @@ const TASKS = [
     time: "< 5 seconds",
     output: "Structured data",
     icon: FileSpreadsheet,
-    color: "#FFF0EB",
+    color: "rgba(212,175,55,0.08)",
     border: "#C5A059",
   },
   {
@@ -117,3 +117,4 @@ export function TaskShowcaseSection() {
     </section>
   )
 }
+

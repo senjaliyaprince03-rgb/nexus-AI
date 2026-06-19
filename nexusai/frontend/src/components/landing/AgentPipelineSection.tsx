@@ -5,7 +5,7 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll"
 import { Target, Search, Bot, CheckCircle2, PenLine } from "lucide-react"
 
 const AGENTS = [
-  { name: "Orchestrator", role: "Breaks down your question into sub-tasks", icon: Target, color: "#FFF0EB", iconColor: "#C5A059" },
+  { name: "Orchestrator", role: "Breaks down your question into sub-tasks", icon: Target, color: "rgba(212,175,55,0.08)", iconColor: "#C5A059" },
   { name: "Retriever",    role: "Runs hybrid BM25 + vector search",         icon: Search, color: "#EEF2FF", iconColor: "#3B6FE8" },
   { name: "Analyst",      role: "Synthesises passages into a draft answer",  icon: Bot, color: "#EDF5F1", iconColor: "#7CB69E" },
   { name: "Critic",       role: "Scores each claim, loops if < 70%",         icon: CheckCircle2, color: "#FFF8E6", iconColor: "#E2B227" },
@@ -93,3 +93,4 @@ export function AgentPipelineSection() {
     </section>
   )
 }
+

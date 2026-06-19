@@ -91,7 +91,7 @@ export default function TermsOfServicePage() {
                       href={`#${id}`}
                       className={`block text-[13px] py-1.5 px-3 rounded-lg transition-all duration-200 ${
                         activeSection === id
-                          ? "text-[#C5A059] bg-[#FFF0EB] dark:bg-[#C5A059]/10 font-medium"
+                          ? "text-[#C5A059] bg-[rgba(212,175,55,0.08)] dark:bg-[#C5A059]/10 font-medium"
                           : "text-[#4B5563] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-[#F8F9FA] hover:bg-[#F8F7F4] dark:hover:bg-[#18181A]"
                       }`}
                     >
@@ -116,7 +116,7 @@ export default function TermsOfServicePage() {
               {/* Title Block */}
               <motion.div variants={fadeUp} custom={0} className="mb-12">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#FFF0EB] dark:bg-[#C5A059]/10 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-[rgba(212,175,55,0.08)] dark:bg-[#C5A059]/10 flex items-center justify-center">
                     <FileText className="w-5 h-5 text-[#C5A059]" />
                   </div>
                   <span className="text-xs font-semibold uppercase tracking-widest text-[#9CA3AF] dark:text-[#71717A]">
@@ -537,3 +537,4 @@ function SectionBody({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
+

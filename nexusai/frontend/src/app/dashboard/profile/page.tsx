@@ -53,7 +53,7 @@ export default function ProfilePage() {
                 className={cn(
                   "w-full text-left px-4 py-2.5 rounded-xl text-sm capitalize font-medium transition-colors whitespace-nowrap",
                   tab === t
-                    ? "bg-[#FFF0EB] text-[#C5A059]"
+                    ? "bg-[rgba(212,175,55,0.08)] text-[#C5A059]"
                     : "text-[#4B5563] hover:bg-[#F8F9FA] hover:text-[#18181B]"
                 )}
                 aria-current={tab === t ? "page" : undefined}
@@ -160,7 +160,7 @@ function PersonalDetailsForm({ user, onSave, saved, errorMsg }: { user: Record<s
             <button 
               type="button" 
               onClick={() => fileInputRef.current?.click()}
-              className="text-sm font-medium text-[#C5A059] hover:text-[#FF8C35] transition-colors bg-[#FFF0EB] px-4 py-2 rounded-full"
+              className="text-sm font-medium text-[#C5A059] hover:text-[#FF8C35] transition-colors bg-[rgba(212,175,55,0.08)] px-4 py-2 rounded-full"
             >
               Change picture
             </button>
@@ -277,7 +277,7 @@ function SecurityForm({ user, saved, errorMsg }: { user: Record<string, any>; sa
             <p className="text-sm font-semibold text-[#18181B]">Authenticator App</p>
             <p className="text-xs text-[#9CA3AF] mt-1">Not enabled. Protect your account with an extra layer of security.</p>
           </div>
-          <button type="button" className="text-xs font-semibold text-[#C5A059] hover:text-[#FF8C35] transition-colors bg-[#FFF0EB] px-3 py-1.5 rounded-full">Enable</button>
+          <button type="button" className="text-xs font-semibold text-[#C5A059] hover:text-[#FF8C35] transition-colors bg-[rgba(212,175,55,0.08)] px-3 py-1.5 rounded-full">Enable</button>
         </div>
       </Section>
       <div className="p-6 bg-[#F8F9FA] flex justify-end">
@@ -373,3 +373,4 @@ function SaveButton({ saved, onClick }: { saved: boolean; onClick?: (e: React.Mo
     </button>
   )
 }
+

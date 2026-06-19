@@ -37,7 +37,7 @@ const steps = [
 export function PlatformSection() {
   return (
     <section id="platform" className="relative px-6 sm:px-8 lg:px-12 py-24 lg:py-32">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(103,232,249,0.08),transparent_28%),radial-gradient(circle_at_80%_80%,rgba(245,158,11,0.08),transparent_28%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(103,232,249,0.08),transparent_28%),radial-gradient(circle_at_80%_80%,rgba(212,175,55,0.08),transparent_28%)]" />
       <div className="relative mx-auto max-w-7xl">
         <MotionReveal>
           <SectionHeader
@@ -76,3 +76,4 @@ export function PlatformSection() {
     </section>
   )
 }
+

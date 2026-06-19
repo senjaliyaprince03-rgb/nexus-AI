@@ -90,7 +90,7 @@ export function Topbar({ title }: { title?: string }) {
             </div>
           )}
           {isAdmin && (
-            <span className="hidden items-center gap-1 rounded-full border border-[#C5A059]/30 bg-[#FFF0EB] px-3 py-1 text-xs text-[#C5A059] md:inline-flex">
+            <span className="hidden items-center gap-1 rounded-full border border-[#C5A059]/30 bg-[rgba(212,175,55,0.08)] px-3 py-1 text-xs text-[#C5A059] md:inline-flex">
               <ShieldCheck strokeWidth={1.75} className="h-4 w-4" />
               Admin
             </span>
@@ -209,14 +209,13 @@ export function Topbar({ title }: { title?: string }) {
               </AnimatePresence>
             </div>
 
-            <motion.button
-              whileHover={{ y: -1, backgroundColor: "var(--bg-secondary)" }}
+            <button
               onClick={() => logout()}
-              className="ml-2 inline-flex items-center gap-2 rounded-full border border-[rgba(0,0,0,0.12)] bg-white px-4 py-2 text-xs font-medium text-[#4B5563] shadow-sm transition-all hover:text-[#18181B] dark:border-[rgba(255,255,255,0.12)] dark:bg-[#18181A] dark:text-[#A1A1AA] dark:hover:text-[#F8F9FA]"
+              className="group ml-2 inline-flex items-center gap-2 rounded-full border border-[rgba(0,0,0,0.12)] bg-white px-4 py-2 text-xs font-medium text-[#4B5563] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:text-[#18181B] dark:border-[rgba(255,255,255,0.12)] dark:bg-[#18181A] dark:text-[#A1A1AA] dark:hover:bg-[#202022] dark:hover:text-[#F8F9FA]"
             >
-              <LogOut strokeWidth={1.75} className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+              <LogOut strokeWidth={1.75} className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               Sign out
-            </motion.button>
+            </button>
           </div>
         </div>
       </div>
@@ -235,3 +234,4 @@ function formatRelativeTime(value: string) {
   if (hours < 24) return `${hours}h ago`
   return `${Math.floor(hours / 24)}d ago`
 }
+

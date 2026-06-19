@@ -302,7 +302,7 @@ export function UnifiedDashboard({ overview, apiState }: UnifiedDashboardProps) 
             </div>
             <Link
               href="/dashboard/documents"
-              className="workflow-upload-btn inline-flex items-center justify-center gap-2.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/[0.06] px-6 py-3 text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA] shadow-[0_0_24px_rgba(245,158,11,0.12),0_0_60px_rgba(245,158,11,0.06)] backdrop-blur transition-all duration-300 hover:bg-[#D4AF37]/[0.12] hover:border-[#D4AF37]/50 hover:shadow-[0_0_36px_rgba(245,158,11,0.2),0_0_80px_rgba(245,158,11,0.1)] hover:-translate-y-0.5"
+              className="workflow-upload-btn inline-flex items-center justify-center gap-2.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/[0.06] px-6 py-3 text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA] shadow-[0_0_24px_rgba(212,175,55,0.12),0_0_60px_rgba(212,175,55,0.06)] backdrop-blur transition-all duration-300 hover:bg-[#D4AF37]/[0.12] hover:border-[#D4AF37]/50 hover:shadow-[0_0_36px_rgba(212,175,55,0.2),0_0_80px_rgba(212,175,55,0.1)] hover:-translate-y-0.5"
             >
               <UploadCloud className="h-4 w-4 text-[#D4AF37]" />
               Upload documents
@@ -382,8 +382,8 @@ export function UnifiedDashboard({ overview, apiState }: UnifiedDashboardProps) 
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#D4AF37]">Next actions</p>
                 <div className="mt-5 space-y-3">
                   {overview.next_actions.map((action, index) => (
-                    <Link key={action.title} href={action.href} className="dashboard-mini-card flex items-start gap-4 p-4 transition-all duration-300 hover:border-[#D4AF37]/30 hover:bg-white dark:hover:bg-[#1A1A1A] hover:shadow-[0_4px_20px_rgba(245,158,11,0.08)] hover:-translate-y-0.5">
-                      <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#FFF0EB] dark:bg-[#D4AF37]/15 border border-transparent dark:border-[#D4AF37]/30 text-sm font-bold text-[#D4AF37]">
+                    <Link key={action.title} href={action.href} className="dashboard-mini-card flex items-start gap-4 p-4 transition-all duration-300 hover:border-[#D4AF37]/30 hover:bg-white dark:hover:bg-[#1A1A1A] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_4px_20px_rgba(255,255,255,0.04)] hover:-translate-y-0.5">
+                      <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(212,175,55,0.08)] dark:bg-[#D4AF37]/15 border border-transparent dark:border-[#D4AF37]/30 text-sm font-bold text-[#D4AF37]">
                         {index + 1}
                       </span>
                       <span className="min-w-0">
@@ -718,7 +718,7 @@ function statusChipClasses(status: string) {
   if (status === "waiting" || status === "unknown") return "bg-[#F4F4F3] text-[#94a3b8] dark:bg-transparent dark:text-[#A1A1AA]"
   if (status === "core" || status === "framework") return "bg-[#EEF2FF] text-[#3730A3] dark:bg-transparent dark:text-[#A78BFA]"
   if (status === "offline" || status === "failed") {
-    return "bg-[#FFF0EB] text-[#8A7035] dark:bg-transparent dark:text-[#D4AF37]"
+    return "bg-[rgba(212,175,55,0.08)] text-[#8A7035] dark:bg-transparent dark:text-[#D4AF37]"
   }
   if (status === "degraded") return "bg-[#FEF3C7] text-[#7A6530] dark:bg-transparent dark:text-[#D4AF37]"
   return "bg-[#F1F1F1] text-[#94a3b8] dark:bg-transparent dark:text-[#A1A1AA]"
@@ -798,4 +798,5 @@ function FeatureBadge({ icon: Icon, title, description }: { icon: any; title: st
     </div>
   )
 }
+
 

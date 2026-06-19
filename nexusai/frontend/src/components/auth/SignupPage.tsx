@@ -267,7 +267,7 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={() => void backend.retry()}
-                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#FFB893] bg-white px-3 py-1.5 text-xs font-semibold text-[#A07D3A] transition hover:bg-[#FFF0EB]"
+                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#FFB893] bg-white px-3 py-1.5 text-xs font-semibold text-[#A07D3A] transition hover:bg-[rgba(212,175,55,0.08)]"
                   >
                     Retry connection
                   </button>
@@ -412,3 +412,4 @@ export default function SignupPage() {
     </div>
   );
 }
+

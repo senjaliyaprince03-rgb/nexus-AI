@@ -356,7 +356,7 @@ function EmbeddedSurface({
   return (
     <div className="mt-6 rounded-[26px] border border-dashed border-black/10 dark:border-[#F8F9FA]/10 bg-[#FCFCFB] dark:bg-[#0B1220] p-5">
       <div className="flex items-start gap-3">
-        <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-[#FFF0EB] dark:bg-[#C5A059]/10 text-[#C5A059]">
+        <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-[rgba(212,175,55,0.08)] dark:bg-[#C5A059]/10 text-[#C5A059]">
           <CheckCircle2 className="h-5 w-5" />
         </span>
         <div>
@@ -389,7 +389,7 @@ function statusChipClasses(status: string) {
   }
   if (status === "core" || status === "framework") return "bg-[#EEF2FF] text-[#3730A3]"
   if (status === "offline" || status === "failed" || status === "unknown" || status === "checking" || status === "waiting") {
-    return "bg-[#FFF0EB] text-[#8A7035]"
+    return "bg-[rgba(212,175,55,0.08)] text-[#8A7035]"
   }
   if (status === "degraded") return "bg-[#FEF3C7] text-[#7A6530]"
   return "bg-[#F1F1F1] text-[#6A6A6A]"
@@ -419,3 +419,4 @@ function statusLabel(status: string) {
   if (status === "checking") return "Not running"
   return "Not running"
 }
+

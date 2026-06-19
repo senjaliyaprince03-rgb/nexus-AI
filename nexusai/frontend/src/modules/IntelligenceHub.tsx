@@ -98,7 +98,7 @@ export default function IntelligenceHub({ workspaceId }: { workspaceId?: string 
               className={cn(
                 "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all",
                 isActive
-                  ? "border-[#C5A059]/30 bg-[#FFF0EB] text-[#C5A059]"
+                  ? "border-[#C5A059]/30 bg-[rgba(212,175,55,0.08)] text-[#C5A059]"
                   : "border-[rgba(0,0,0,0.08)] bg-white text-[#4B5563] hover:border-[#DADADA]",
               )}
             >
@@ -119,7 +119,7 @@ export default function IntelligenceHub({ workspaceId }: { workspaceId?: string 
           className="w-full resize-none rounded-xl border border-[rgba(0,0,0,0.08)] bg-[#F8F9FA] p-4 text-sm text-[#18181B] outline-none placeholder:text-[#9CA3AF] focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059]"
         />
         {error && (
-          <p className="rounded-xl border border-[#FFD7C7] bg-[#FFF0EB] px-4 py-2 text-sm text-[#A07D3A]">
+          <p className="rounded-xl border border-[#FFD7C7] bg-[rgba(212,175,55,0.08)] px-4 py-2 text-sm text-[#A07D3A]">
             {error}
           </p>
         )}
@@ -152,3 +152,4 @@ export default function IntelligenceHub({ workspaceId }: { workspaceId?: string 
     </div>
   )
 }
+

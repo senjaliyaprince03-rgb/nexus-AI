@@ -59,7 +59,7 @@ const PLANS = [
     yearlyPrice: 19190,
     currency: "₹",
     icon: Crown,
-    iconBg: "bg-[#FFF0EB]",
+    iconBg: "bg-[rgba(212,175,55,0.08)]",
     iconColor: "text-[#D4AF37]",
     cta: "Upgrade to Pro",
     popular: true,
@@ -178,7 +178,7 @@ function BillingToggle({ isYearly, onToggle }: { isYearly: boolean; onToggle: ()
             initial={{ opacity: 0, scale: 0.8, x: -8 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.8, x: -8 }}
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#FFF0EB] text-[#D4AF37] text-sm font-semibold border border-[rgba(245,158,11,0.2)]"
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(212,175,55,0.08)] text-[#D4AF37] text-sm font-semibold border border-[rgba(212,175,55,0.2)]"
           >
             <BadgePercent className="w-3 h-3" />
             Save 20%
@@ -215,7 +215,7 @@ function PricingCard({ plan, isYearly, index, currentPlanId, onUpgrade, isUpgrad
       {/* Popular badge */}
       {plan.badge && (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37] text-white text-sm font-semibold shadow-[0_4px_16px_rgba(245,158,11,0.4)]">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37] text-white text-sm font-semibold shadow-[0_4px_16px_rgba(212,175,55,0.4)]">
             <Star className="w-3 h-3 fill-current" />
             {plan.badge}
           </div>
@@ -226,7 +226,7 @@ function PricingCard({ plan, isYearly, index, currentPlanId, onUpgrade, isUpgrad
       <div
         className={`flex flex-col flex-1 rounded-[15px] p-6 ${
           plan.popular
-            ? "bg-white shadow-[0_20px_60px_rgba(245,158,11,0.12)]"
+            ? "bg-white shadow-[0_20px_60px_rgba(212,175,55,0.12)]"
             : isCurrent
             ? "bg-[#F8F9FA] border border-[rgba(0,0,0,0.1)]"
             : "bg-white border border-[rgba(0,0,0,0.07)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)]"
@@ -279,7 +279,7 @@ function PricingCard({ plan, isYearly, index, currentPlanId, onUpgrade, isUpgrad
             <button 
               onClick={() => onUpgrade(plan.id)}
               disabled={isUpgrading}
-              className="w-full py-2.5 rounded-xl text-white text-sm font-semibold bg-gradient-to-r from-[#D4AF37] to-[#d97706] shadow-[0_4px_20px_rgba(245,158,11,0.35)] hover:shadow-[0_8px_30px_rgba(245,158,11,0.45)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-xl text-white text-sm font-semibold bg-gradient-to-r from-[#D4AF37] to-[#B8962D] shadow-[0_4px_20px_rgba(212,175,55,0.35)] hover:shadow-[0_8px_30px_rgba(212,175,55,0.45)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2"
             >
               {plan.cta}
               <ArrowRight className="w-4 h-4" />
@@ -313,7 +313,7 @@ function PricingCard({ plan, isYearly, index, currentPlanId, onUpgrade, isUpgrad
             <li key={feature} className="flex items-start gap-2.5 text-sm text-[#C7CDD8]">
               <div
                 className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                  plan.popular ? "bg-[#FFF0EB] text-[#D4AF37]" : "bg-[#F4F3EF] text-[#D4AF37]"
+                  plan.popular ? "bg-[rgba(212,175,55,0.08)] text-[#D4AF37]" : "bg-[#F4F3EF] text-[#D4AF37]"
                 }`}
               >
                 <Check className="w-2.5 h-2.5" strokeWidth={3} />
@@ -391,7 +391,7 @@ function UsageMeter() {
       </div>
 
       <div className="mt-5 pt-4 border-t border-[rgba(0,0,0,0.06)]">
-        <div className="flex items-start gap-2 p-3 rounded-xl bg-[#FFF9F6] border border-[rgba(245,158,11,0.1)]">
+        <div className="flex items-start gap-2 p-3 rounded-xl bg-[rgba(212,175,55,0.04)] border border-[rgba(212,175,55,0.1)]">
           <AlertCircle className="w-3.5 h-3.5 text-[#D4AF37] flex-shrink-0 mt-0.5" />
           <p className="text-[11px] text-[#C7CDD8] leading-relaxed">
             Upgrade to <strong className="text-[#D4AF37]">Pro</strong> for unlimited queries and documents with no monthly caps.
@@ -499,7 +499,7 @@ function FAQAccordion() {
             onClick={() => setOpenIndex(openIndex === i ? null : i)}
             className={`w-full flex items-start justify-between gap-4 text-left px-5 py-4 rounded-xl transition-all duration-200 ${
               openIndex === i
-                ? "bg-[#FFF9F6] border border-[rgba(245,158,11,0.15)]"
+                ? "bg-[rgba(212,175,55,0.04)] border border-[rgba(212,175,55,0.15)]"
                 : "bg-white border border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.12)]"
             }`}
           >
@@ -620,7 +620,7 @@ export default function BillingPage() {
               <button 
                 onClick={() => handleUpgrade("pro")}
                 disabled={isUpgrading}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#d97706] text-white text-sm font-semibold shadow-[0_2px_10px_rgba(245,158,11,0.3)] hover:shadow-[0_4px_20px_rgba(245,158,11,0.4)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all duration-200"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B8962D] text-white text-sm font-semibold shadow-[0_2px_10px_rgba(212,175,55,0.3)] hover:shadow-[0_4px_20px_rgba(212,175,55,0.4)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all duration-200"
               >
                 <Crown className="w-3.5 h-3.5" />
                 Upgrade to Pro
@@ -643,7 +643,7 @@ export default function BillingPage() {
             transition={{ delay: 0.18 }}
             className="text-center mb-8"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFF0EB] border border-[rgba(245,158,11,0.2)] text-[#D4AF37] text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(212,175,55,0.08)] border border-[rgba(212,175,55,0.2)] text-[#D4AF37] text-sm font-medium mb-4">
               <IndianRupee className="w-3.5 h-3.5" />
               Simple, transparent pricing
             </div>
@@ -693,7 +693,7 @@ export default function BillingPage() {
             <p className="text-sm text-[#94a3b8] mb-3">Still have questions?</p>
             <a
               href="mailto:support@nexusai.in"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-[#D4AF37] bg-white border border-[rgba(245,158,11,0.2)] hover:bg-[#FFF0EB] transition-all duration-200"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-[#D4AF37] bg-white border border-[rgba(212,175,55,0.2)] hover:bg-[rgba(212,175,55,0.08)] transition-all duration-200"
             >
               Contact Support →
             </a>
@@ -703,3 +703,4 @@ export default function BillingPage() {
     </div>
   )
 }
+

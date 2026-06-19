@@ -253,7 +253,7 @@ export default function WorkspacePage() {
                 </div>
                 <button
                   onClick={() => setShowInvite(true)}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#FFF0EB] px-3.5 py-2 text-xs font-semibold text-[#C5A059] transition hover:bg-[#FFE2D7]"
+                  className="inline-flex items-center gap-2 rounded-full bg-[rgba(212,175,55,0.08)] px-3.5 py-2 text-xs font-semibold text-[#C5A059] transition hover:bg-[#FFE2D7]"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Add member
@@ -589,7 +589,7 @@ function getInitials(member: WorkspaceMember): string {
 function getRoleBadge(role: string): { classes: string; icon: string } {
   switch (role) {
     case "owner":
-      return { classes: "bg-[#FFF0EB] text-[#C5A059] dark:bg-[#FFF0EB] dark:text-[#C5A059]", icon: "👑" }
+      return { classes: "bg-[rgba(212,175,55,0.08)] text-[#C5A059] dark:bg-[rgba(212,175,55,0.08)] dark:text-[#C5A059]", icon: "👑" }
     case "admin":
       return { classes: "bg-[#EFF6FF] text-[#3B6FE8] dark:bg-[#EFF6FF] dark:text-[#3B6FE8]", icon: "🛡" }
     default:
@@ -606,3 +606,4 @@ function filterMembers(members: WorkspaceMember[], query: string): WorkspaceMemb
     (m.last_name && m.last_name.toLowerCase().includes(q))
   )
 }
+

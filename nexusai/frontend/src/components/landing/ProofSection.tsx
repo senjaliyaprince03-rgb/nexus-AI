@@ -17,7 +17,7 @@ export function ProofSection() {
 
   return (
     <section id="proof" className="relative px-6 sm:px-8 lg:px-12 py-24 lg:py-32">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(139,92,246,0.12),transparent_24%),radial-gradient(circle_at_80%_100%,rgba(245,158,11,0.1),transparent_24%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(139,92,246,0.12),transparent_24%),radial-gradient(circle_at_80%_100%,rgba(212,175,55,0.1),transparent_24%)]" />
       <div className="relative mx-auto max-w-7xl">
         <MotionReveal>
           <SectionHeader
@@ -45,3 +45,4 @@ export function ProofSection() {
     </section>
   )
 }
+
