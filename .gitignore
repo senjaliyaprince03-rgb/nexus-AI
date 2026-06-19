@@ -39,3 +39,6 @@ packages/*/.git/
 *.bak
 git_history_*.txt
 backup_logs_*/
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
