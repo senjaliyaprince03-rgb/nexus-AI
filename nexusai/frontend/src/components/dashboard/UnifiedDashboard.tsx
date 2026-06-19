@@ -612,7 +612,7 @@ function ProjectCard({ project }: { project: IntegrationProject }) {
       </div>
       <p className="line-clamp-3 min-h-[72px] text-[15px] leading-relaxed text-[#4B5563] dark:text-[#AEB6C3]">{project.summary}</p>
       {project.note?.trim() ? (
-        <div className="mt-4 rounded-xl border border-black/5 dark:border-[#F8F9FA]/8 bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
+        <div className="mt-4 rounded-xl bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
           {project.note}
         </div>
       ) : null}
