@@ -126,6 +126,15 @@ const FALLBACK_PROJECTS: IntegrationProject[] = [
   },
 ]
 
+const PROJECT_NOTES: Record<string, string> = {
+  "personal-nexusai-core": "The primary workspace running locally. Opens directly inside the dashboard.",
+  "multi-agent-hub": "Integrated into NexusAI. This feature opens in the dashboard and does not require a separate local app.",
+  "nexus-agents": "Integrated into NexusAI. Deep research agents run directly within the dashboard surface.",
+  "svenhven-nexus-ai": "Integrated into NexusAI. Access sentiment analysis analytics directly from your dashboard.",
+  "nexus-gcp": "Integrated into NexusAI. GCP Cloud Run agents seamlessly mapped to your local dashboard.",
+  "primisai-nexus": "Python agent framework package. Inspect framework agents from inside the dashboard.",
+}
+
 const MODULE_ROUTE_COPY: Record<ModuleTab, { title: string; description: string; href: string; accent: string }> = {
   "personal-nexusai-core": {
     title: "Core workspace surface",
@@ -257,9 +266,9 @@ export default function ModulesPage() {
 
                     <p className="min-h-[72px] text-sm leading-6 text-[#4B5563] dark:text-[#D1D5DB]">{project.summary}</p>
 
-                    {project.note?.trim() ? (
+                    {(project.note || PROJECT_NOTES[project.id])?.trim() ? (
                       <div className="mt-4 rounded-xl bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
-                        {project.note}
+                        {project.note || PROJECT_NOTES[project.id]}
                       </div>
                     ) : null}
 
