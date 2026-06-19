@@ -64,6 +64,7 @@ export type IntegrationProject = {
   launch_url?: string
   native_href: string
   primary_action: string
+  note?: string
 }
 
 export type CapabilityItem = {
@@ -610,11 +611,11 @@ function ProjectCard({ project }: { project: IntegrationProject }) {
         <StatusChip status={displayStatus} />
       </div>
       <p className="line-clamp-3 min-h-[72px] text-[15px] leading-relaxed text-[#4B5563] dark:text-[#AEB6C3]">{project.summary}</p>
-      <div className="mt-4 rounded-xl border border-black/5 dark:border-[#F8F9FA]/8 bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
-        {project.status === "integrated" || project.health === "framework"
-          ? "Integrated into NexusAI. This feature opens in the dashboard and does not require a separate local app."
-          : "The primary workspace running locally. Opens directly inside the dashboard."}
-      </div>
+      {project.note?.trim() ? (
+        <div className="mt-4 rounded-xl border border-black/5 dark:border-[#F8F9FA]/8 bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
+          {project.note}
+        </div>
+      ) : null}
 
       <div className="mt-4 mb-4 flex flex-wrap gap-2">
         {project.capabilities.slice(0, 3).map((capability) => (

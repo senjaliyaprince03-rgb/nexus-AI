@@ -67,6 +67,7 @@ const fallbackProjects = [
     services: [],
     native_href: "/dashboard/workspace",
     primary_action: "Open workspace",
+    note: "The primary workspace running locally. Opens directly inside the dashboard.",
   },
   {
     id: "multi-agent-hub",
@@ -80,6 +81,7 @@ const fallbackProjects = [
     services: [],
     native_href: "/dashboard/modules",
     primary_action: "Open intelligence hub",
+    note: "Integrated into NexusAI. This feature opens in the dashboard and does not require a separate local app.",
   },
   {
     id: "nexus-agents",
@@ -93,6 +95,7 @@ const fallbackProjects = [
     services: [],
     native_href: "/dashboard/modules",
     primary_action: "Open deep research",
+    note: "Integrated into NexusAI. Deep research agents run directly within the dashboard surface.",
   },
   {
     id: "svenhven-nexus-ai",
@@ -106,6 +109,7 @@ const fallbackProjects = [
     services: [],
     native_href: "/dashboard/analytics",
     primary_action: "Review sentiment signals",
+    note: "Integrated into NexusAI. Access sentiment analysis analytics directly from your dashboard.",
   },
   {
     id: "nexus-gcp",
@@ -119,6 +123,7 @@ const fallbackProjects = [
     services: [],
     native_href: "/dashboard/agents",
     primary_action: "Open task agents",
+    note: "Integrated into NexusAI. GCP Cloud Run agents seamlessly mapped to your local dashboard.",
   },
   {
     id: "primisai-nexus",
@@ -132,6 +137,7 @@ const fallbackProjects = [
     services: [],
     native_href: "/dashboard/agents",
     primary_action: "Inspect framework agents",
+    note: "Python agent framework package. Inspect framework agents from inside the dashboard.",
   },
 ]
 

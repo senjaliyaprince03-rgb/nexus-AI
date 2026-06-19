@@ -52,6 +52,7 @@ const FALLBACK_PROJECTS: IntegrationProject[] = [
     services: [],
     native_href: "/dashboard/workspace",
     primary_action: "Open workspace",
+    note: "The primary workspace running locally. Opens directly inside the dashboard.",
   },
   {
     id: "multi-agent-hub",
@@ -65,6 +66,7 @@ const FALLBACK_PROJECTS: IntegrationProject[] = [
     services: [],
     native_href: "/dashboard/modules",
     primary_action: "Open intelligence hub",
+    note: "Integrated into NexusAI. This feature opens in the dashboard and does not require a separate local app.",
   },
   {
     id: "nexus-agents",
@@ -78,6 +80,7 @@ const FALLBACK_PROJECTS: IntegrationProject[] = [
     services: [],
     native_href: "/dashboard/modules",
     primary_action: "Open deep research",
+    note: "Integrated into NexusAI. Deep research agents run directly within the dashboard surface.",
   },
   {
     id: "svenhven-nexus-ai",
@@ -91,6 +94,7 @@ const FALLBACK_PROJECTS: IntegrationProject[] = [
     services: [],
     native_href: "/dashboard/analytics",
     primary_action: "Review sentiment signals",
+    note: "Integrated into NexusAI. Access sentiment analysis analytics directly from your dashboard.",
   },
   {
     id: "nexus-gcp",
@@ -104,6 +108,7 @@ const FALLBACK_PROJECTS: IntegrationProject[] = [
     services: [],
     native_href: "/dashboard/agents",
     primary_action: "Open task agents",
+    note: "Integrated into NexusAI. GCP Cloud Run agents seamlessly mapped to your local dashboard.",
   },
   {
     id: "primisai-nexus",
@@ -117,6 +122,7 @@ const FALLBACK_PROJECTS: IntegrationProject[] = [
     services: [],
     native_href: "/dashboard/agents",
     primary_action: "Inspect framework agents",
+    note: "Python agent framework package. Inspect framework agents from inside the dashboard.",
   },
 ]
 
@@ -251,11 +257,11 @@ export default function ModulesPage() {
 
                     <p className="min-h-[72px] text-sm leading-6 text-[#4B5563] dark:text-[#D1D5DB]">{project.summary}</p>
 
-                    <div className="mt-4 rounded-xl border border-black/5 dark:border-[#F8F9FA]/8 bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
-                      {project.status === "integrated" || project.health === "framework"
-                        ? "Integrated into NexusAI. This feature opens in the dashboard and does not require a separate local app."
-                        : "The primary workspace running locally. Opens directly inside the dashboard."}
-                    </div>
+                    {project.note?.trim() ? (
+                      <div className="mt-4 rounded-xl border border-black/5 dark:border-[#F8F9FA]/8 bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
+                        {project.note}
+                      </div>
+                    ) : null}
 
                     <div className="mt-4 mb-4 flex flex-wrap gap-2">
                       {project.capabilities.slice(0, 4).map((capability) => (
