@@ -629,6 +629,17 @@ function ProjectCard({ project }: { project: IntegrationProject }) {
         )}
       </div>
 
+      {isCore && project.services.length > 0 && (
+        <div className="mb-4 flex flex-wrap gap-2 border-t border-black/5 dark:border-[#F8F9FA]/5 pt-4">
+          {project.services.map((service) => (
+            <span key={service.id} title={`${service.name}: ${serviceHealthLabel(service.health)}`} className="dashboard-chip inline-flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium text-[#94a3b8] dark:text-[#E5E7EB] leading-none">
+              <span className={cn("h-1.5 w-1.5 rounded-full", healthDot(service.health))} />
+              {service.type.toUpperCase()} {service.port ? service.port : ""} · {serviceHealthLabel(service.health)}
+            </span>
+          ))}
+        </div>
+      )}
+
       <div className="mt-auto pt-2">
         <Link 
           href={project.native_href} 
@@ -638,16 +649,6 @@ function ProjectCard({ project }: { project: IntegrationProject }) {
           <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
         </Link>
       </div>
-      {isCore && project.services.length > 0 && (
-        <div className="mt-5 flex flex-wrap gap-2 border-t border-black/5 dark:border-[#F8F9FA]/5 pt-4">
-          {project.services.map((service) => (
-            <span key={service.id} title={`${service.name}: ${serviceHealthLabel(service.health)}`} className="dashboard-chip inline-flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium text-[#94a3b8] dark:text-[#E5E7EB] leading-none">
-              <span className={cn("h-1.5 w-1.5 rounded-full", healthDot(service.health))} />
-              {service.type.toUpperCase()} {service.port ? service.port : ""} · {serviceHealthLabel(service.health)}
-            </span>
-          ))}
-        </div>
-      )}
     </motion.article>
   )
 }
