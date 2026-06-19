@@ -1,0 +1,41 @@
+# Nexus Master Project
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.env
+.env.local
+**/.env.local
+.venv/
+**/.venv/
+venv/
+**/venv/
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+*.log
+.DS_Store
+Thumbs.db
+*.sqlite3
+*.db
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+apps/*/.git/
+packages/*/.git/
+
+# Local Environment and Secrets
+**/.env
+**/.env.*
+!**/.env*.example
+
+# Incident Backups
+*.bak
+git_history_*.txt
+backup_logs_*/

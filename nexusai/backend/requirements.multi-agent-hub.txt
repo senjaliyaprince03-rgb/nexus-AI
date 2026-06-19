@@ -1,0 +1,24 @@
+# Optional runtime for the integrated upstream Streamlit/Agno project.
+# Install with:
+#   python -m pip install -r backend/requirements.multi-agent-hub.txt
+#
+# The preserved upstream source lives in:
+#   legacy/streamlit-multi-agent-hub
+agno
+openai
+python-dotenv
+duckduckgo-search
+yfinance
+groq
+arxiv
+wikipedia
+newspaper4k
+lxml_html_clean
+youtube_transcript_api
+langchain-astradb
+langchain_huggingface
+langchain_groq
+langchain_community
+cassio
+beautifulsoup4
+langgraph

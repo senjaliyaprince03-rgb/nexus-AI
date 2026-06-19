@@ -1,0 +1,17 @@
+services:
+  backend:
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      LOG_LEVEL: debug
+
+  worker:
+    command: celery -A app.workers.celery_app worker --loglevel=debug --concurrency=1 -Q ingestion,agents,default
+
+  beat:
+    command: celery -A app.workers.celery_app beat --loglevel=debug
+
+  frontend:
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000

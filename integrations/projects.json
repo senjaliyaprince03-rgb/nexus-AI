@@ -1,0 +1,273 @@
+{
+  "version": "2026-06-01",
+  "name": "Nexus Master Integration",
+  "gateway": {
+    "default_port": 9100,
+    "reason": "Port 9000 is reserved by MinIO in the personal NexusAi Docker stack."
+  },
+  "projects": [
+    {
+      "id": "personal-nexusai-core",
+      "name": "Personal NexusAi Core",
+      "source_url": "local:C:/Users/Prince/Downloads/NexusAi/nexusai",
+      "local_path": "nexusai",
+      "status": "core",
+      "category": "Personal full-stack workspace",
+      "summary": "The primary FastAPI, Next.js, Celery, Redis, MongoDB, and MinIO workspace already used by this project.",
+      "capabilities": [
+        "authentication and verification flow",
+        "document ingestion",
+        "multi-agent execution",
+        "RAG-ready backend",
+        "premium dashboard UI"
+      ],
+      "commands": {
+        "start": "docker compose up -d",
+        "frontend": "npm --prefix nexusai/frontend run dev",
+        "backend_tests": "nexusai/backend/.venv/Scripts/python.exe -m pytest nexusai/backend/tests"
+      },
+      "services": [
+        {
+          "id": "personal_nexusai_api",
+          "name": "Personal NexusAi API",
+          "type": "api",
+          "url": "http://localhost:8000",
+          "health_path": "http://127.0.0.1:8000/health",
+          "port": 8000,
+          "proxy": true
+        },
+        {
+          "id": "personal_nexusai_ui",
+          "name": "Personal NexusAi UI",
+          "type": "ui",
+          "url": "http://localhost:3001",
+          "health_path": "http://127.0.0.1:3001/",
+          "port": 3001,
+          "proxy": false
+        }
+      ]
+    },
+    {
+      "id": "multi-agent-hub",
+      "name": "NexusAI Multi-Agent Intelligence Hub",
+      "source_url": "https://github.com/HimanshuBaurai/NexusAI-Multi-Agent-Intelligence-Hub",
+      "local_path": "apps/multi-agent-hub",
+      "status": "integrated",
+      "commit": "be9f65d",
+      "category": "Streamlit multi-agent app",
+      "summary": "Specialized Agno/LangChain agents for web, finance, academic research, math, Wikipedia, news, YouTube, and RAG workflows.",
+      "capabilities": [
+        "web search agent",
+        "finance agent",
+        "academic research agent",
+        "math agent",
+        "Wikipedia agent",
+        "news and YouTube summarization",
+        "AstraDB-backed RAG"
+      ],
+      "commands": {
+        "install": "pip install -r requirements.txt",
+        "start": "streamlit run app.py --server.port 8501"
+      },
+      "services": [
+        {
+          "id": "multi_agent_hub",
+          "name": "Multi-Agent Hub UI",
+          "type": "ui",
+          "url": "http://localhost:8501",
+          "health_path": "http://127.0.0.1:8501/",
+          "port": 8501,
+          "proxy": false
+        }
+      ]
+    },
+    {
+      "id": "nexus-agents",
+      "name": "Nexus Agents Deep Research",
+      "source_url": "https://github.com/trilogy-group/nexus-agents",
+      "local_path": "apps/nexus-agents",
+      "status": "integrated",
+      "commit": "415fe5c",
+      "category": "Deep research and MCP platform",
+      "summary": "Hierarchical research agents with MCP search providers, PostgreSQL persistence, DOK taxonomy, projects, and CSV exports.",
+      "capabilities": [
+        "deep research tasks",
+        "data aggregation tasks",
+        "DOK taxonomy",
+        "project knowledge base",
+        "MCP provider orchestration",
+        "CSV exports"
+      ],
+      "commands": {
+        "install": "uv sync",
+        "infra": "docker compose up -d",
+        "start": "uv run python start.py --api-port 12000 --web-port 12001"
+      },
+      "services": [
+        {
+          "id": "nexus_agents_api",
+          "name": "Nexus Agents API",
+          "type": "api",
+          "url": "http://localhost:12000",
+          "health_path": "http://127.0.0.1:12000/health",
+          "port": 12000,
+          "proxy": true
+        },
+        {
+          "id": "nexus_agents_ui",
+          "name": "Nexus Agents UI",
+          "type": "ui",
+          "url": "http://localhost:12001",
+          "health_path": "http://127.0.0.1:12001/",
+          "port": 12001,
+          "proxy": false
+        }
+      ]
+    },
+    {
+      "id": "svenhven-nexus-ai",
+      "name": "Nexus AI Sentiment Platform",
+      "source_url": "https://github.com/svenhven/nexus-ai",
+      "local_path": "apps/nexus-ai",
+      "status": "integrated",
+      "commit": "f821dfc",
+      "category": "Next.js and FastAPI AI app",
+      "summary": "A lightweight Next.js/FastAPI platform with Hugging Face sentiment analysis, now shifted to non-conflicting local ports.",
+      "capabilities": [
+        "sentiment analysis",
+        "FastAPI backend",
+        "Next.js frontend",
+        "SQLite query history foundation"
+      ],
+      "commands": {
+        "backend": "python main.py",
+        "frontend": "npm run dev -- --hostname localhost -p 3002"
+      },
+      "services": [
+        {
+          "id": "svenhven_nexus_ai_api",
+          "name": "Nexus AI Sentiment API",
+          "type": "api",
+          "url": "http://localhost:8002",
+          "health_path": "http://127.0.0.1:8002/",
+          "port": 8002,
+          "proxy": true
+        },
+        {
+          "id": "svenhven_nexus_ai_ui",
+          "name": "Nexus AI Sentiment UI",
+          "type": "ui",
+          "url": "http://localhost:3002",
+          "health_path": "http://127.0.0.1:3002/",
+          "port": 3002,
+          "proxy": false
+        }
+      ]
+    },
+    {
+      "id": "nexus-gcp",
+      "name": "NEXUS GCP Agent System",
+      "source_url": "https://github.com/Amulya631/Nexus_Agent",
+      "local_path": "apps/nexus-gcp",
+      "status": "integrated",
+      "commit": "7d037d2",
+      "category": "GCP Cloud Run multi-agent system",
+      "summary": "Gemini-routed orchestrator with calendar, task, and memory agents designed for Firestore and Cloud Run deployment.",
+      "capabilities": [
+        "Gemini intent routing",
+        "calendar agent",
+        "task agent",
+        "memory agent",
+        "Firestore persistence",
+        "Cloud Run deployment pattern"
+      ],
+      "commands": {
+        "orchestrator": "PORT=8081 python orchestrator/main.py",
+        "calendar": "PORT=8082 python calendar-agent/main.py",
+        "task": "PORT=8083 python task-agent/main.py",
+        "memory": "PORT=8084 python memory-agent/main.py",
+        "frontend": "PORT=8085 python frontend/main.py"
+      },
+      "services": [
+        {
+          "id": "nexus_gcp_frontend",
+          "name": "NEXUS GCP Frontend",
+          "type": "ui",
+          "url": "http://localhost:8085",
+          "health_path": "http://127.0.0.1:8085/health",
+          "port": 8085,
+          "proxy": false
+        },
+        {
+          "id": "nexus_gcp_orchestrator",
+          "name": "NEXUS GCP Orchestrator",
+          "type": "api",
+          "url": "http://localhost:8081",
+          "health_path": "http://127.0.0.1:8081/",
+          "port": 8081,
+          "proxy": true
+        }
+      ]
+    },
+    {
+      "id": "primisai-nexus",
+      "name": "PrimisAI Nexus Framework",
+      "source_url": "https://github.com/PrimisAI/nexus",
+      "local_path": "packages/primisai",
+      "status": "integrated",
+      "commit": "5f9c11e",
+      "category": "Python agent framework package",
+      "summary": "A reusable Python package for supervisors, agents, YAML-defined hierarchies, MCP tools, structured outputs, and workflow logs.",
+      "capabilities": [
+        "agent and supervisor classes",
+        "hierarchical supervision",
+        "YAML agent configuration",
+        "MCP server integration",
+        "structured agent outputs",
+        "workflow history and logs"
+      ],
+      "commands": {
+        "install_editable": "pip install -e .",
+        "tests": "pytest"
+      },
+      "services": []
+    },
+    {
+      "id": "personal-nexusai-isolated",
+      "name": "Personal NexusAi Isolated Copy",
+      "source_url": "local:C:/Users/Prince/Downloads/NexusAi/apps/personal-nexus-ai",
+      "local_path": "apps/personal-nexus-ai",
+      "status": "optional",
+      "category": "Isolated Docker copy",
+      "summary": "A port-shifted copy of the personal NexusAi app for running beside imported systems without colliding with 3000/8000.",
+      "capabilities": [
+        "same personal app stack",
+        "isolated Docker ports",
+        "side-by-side integration testing"
+      ],
+      "commands": {
+        "start": "docker compose up -d"
+      },
+      "services": [
+        {
+          "id": "personal_nexusai_isolated_api",
+          "name": "Isolated Personal NexusAi API",
+          "type": "api",
+          "url": "http://localhost:8001",
+          "health_path": "http://127.0.0.1:8001/health",
+          "port": 8001,
+          "proxy": true
+        },
+        {
+          "id": "personal_nexusai_isolated_ui",
+          "name": "Isolated Personal NexusAi UI",
+          "type": "ui",
+          "url": "http://localhost:3001",
+          "health_path": "http://127.0.0.1:3001/",
+          "port": 3001,
+          "proxy": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+name: nexusai-backend
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: nexusai-mongodb
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nexusai
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--username", "nexusai", "--password", "secret", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: nexusai-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --save "" --appendonly no
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    container_name: nexusai-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: nexusai-api
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      MONGODB_URI: mongodb://nexusai:secret@mongodb:27017/?authSource=admin
+      MONGODB_DB_NAME: nexusai
+      USE_MONGO_MOCK: "false"
+      ALLOW_LOCAL_VECTOR_FALLBACK: "true"
+      ATLAS_VECTOR_SEARCH_INDEX: ""
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT: minio:9000
+      MINIO_USE_SSL: "false"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: nexusai-worker
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app worker --loglevel=info --concurrency=2 -Q ingestion,agents,default
+    env_file: .env
+    environment:
+      MONGODB_URI: mongodb://nexusai:secret@mongodb:27017/?authSource=admin
+      MONGODB_DB_NAME: nexusai
+      USE_MONGO_MOCK: "false"
+      ALLOW_LOCAL_VECTOR_FALLBACK: "true"
+      ATLAS_VECTOR_SEARCH_INDEX: ""
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT: minio:9000
+      MINIO_USE_SSL: "false"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: nexusai-beat
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app beat --loglevel=info
+    env_file: .env
+    environment:
+      MONGODB_URI: mongodb://nexusai:secret@mongodb:27017/?authSource=admin
+      MONGODB_DB_NAME: nexusai
+      USE_MONGO_MOCK: "false"
+      ALLOW_LOCAL_VECTOR_FALLBACK: "true"
+      ATLAS_VECTOR_SEARCH_INDEX: ""
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT: minio:9000
+      MINIO_USE_SSL: "false"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    working_dir: /app
+
+volumes:
+  mongodb_data:
+  minio_data:

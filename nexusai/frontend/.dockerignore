@@ -1,0 +1,40 @@
+# Build output — rebuilt inside Docker, never copied in
+.next
+out
+
+# Dependencies — installed inside Docker from package-lock.json
+node_modules
+
+# Local env files — secrets must come via --build-arg or runtime env, never baked in
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dev tooling — not needed at runtime
+.eslintrc*
+.prettierrc*
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+playwright-report
+test-results
+
+# Git & editor
+.git
+.gitignore
+.github
+.vscode
+.idea
+*.md
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Always keep dependency manifests in the Docker build context.
+!package.json
+!package-lock.json

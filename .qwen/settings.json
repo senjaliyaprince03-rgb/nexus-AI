@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Agent(general-purpose)",
+      "Bash(mkdir *)"
+    ]
+  },
+  "$version": 4
+}

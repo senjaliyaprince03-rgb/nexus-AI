@@ -1,0 +1,179 @@
+version: "3.9"
+
+x-backend-env: &backend-env
+  DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://nexus:nexus@postgres:5432/nexusai}
+  REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+  CELERY_BROKER_URL: ${CELERY_BROKER_URL:-redis://redis:6379/1}
+  CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND:-redis://redis:6379/2}
+  MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio:9000}
+  MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+  MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+  MINIO_BUCKET: ${MINIO_BUCKET:-nexusai-docs}
+  MINIO_SECURE: "false"
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+  SECRET_KEY: ${SECRET_KEY:-dev-secret-change-in-production}
+  ENVIRONMENT: ${ENVIRONMENT:-development}
+  ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000}
+  EMBEDDING_MODEL: ${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
+
+services:
+
+  # ── PostgreSQL with pgvector ─────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nexus
+      POSTGRES_PASSWORD: nexus
+      POSTGRES_DB: nexusai
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nexus -d nexusai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Redis ────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── MinIO (object storage) ───────────────────────────────────────
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI backend ──────────────────────────────────────────────
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-dev}
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+    volumes:
+      - ../backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Celery worker ────────────────────────────────────────────────
+  celery:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-dev}
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app worker --loglevel=info --queues=ingestion,agents,default -c 2
+    environment:
+      <<: *backend-env
+    volumes:
+      - ../backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  # ── Celery Beat (scheduled tasks) ────────────────────────────────
+  celery-beat:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-dev}
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app beat --loglevel=info
+    environment:
+      <<: *backend-env
+    volumes:
+      - ../backend:/app
+    depends_on:
+      - redis
+
+  # ── Next.js frontend ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      target: ${FRONTEND_TARGET:-dev}
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXTAUTH_SECRET: ${SECRET_KEY:-dev-secret}
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  # ── Nginx reverse proxy ──────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy_params:/etc/nginx/proxy_params:ro
+      - nginx_certs:/etc/letsencrypt
+    profiles:
+      - production
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  nginx_certs:
+
+networks:
+  default:
+    name: nexusai-net

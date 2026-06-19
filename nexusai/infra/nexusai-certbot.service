@@ -1,0 +1,26 @@
+# /etc/systemd/system/nexusai-certbot.service
+
+[Unit]
+Description=NexusAI — certbot certificate renewal
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Run certbot renewal, then reload nginx without downtime
+ExecStart=/usr/bin/docker run --rm \
+    -v /etc/letsencrypt:/etc/letsencrypt \
+    -v certbot_webroot:/var/www/certbot \
+    certbot/certbot renew --quiet
+
+# Reload nginx config (zero-downtime — existing connections are not dropped)
+ExecStartPost=/usr/bin/docker compose -f /opt/nexusai/docker-compose.yml \
+    --profile prod exec nginx nginx -s reload
+
+# Log output to journald
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nexusai-certbot
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+{
+    "CodeGPT.apiKey": "DeepSeek",
+    "python.analysis.diagnosticSeverityOverrides": {
+        
+    },
+    "cSpell.words": [
+        "asyncpg",
+        "HNSW",
+        "nexusai",
+        "pgvector",
+        "plainto",
+        "structlog",
+        "tsquery",
+        "tsvector",
+        "Uvicorn",
+        "venv"
+    ],
+    "python.defaultInterpreterPath": "${workspaceFolder}\\nexusai\\backend\\.venv\\Scripts\\python.exe",
+    "python.terminal.activateEnvironment": false
+}

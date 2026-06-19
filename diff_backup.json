@@ -1,0 +1,85 @@
+﻿
+C:\Users\Prince\.gemini\antigravity\brain\e43c47ad-92aa-4f65-a88e-3a9669f983b9\.system_generated\logs\transcript_full.j
+sonl:73:{"step_index":74,"source":"MODEL","type":"RUN_COMMAND","status":"DONE","created_at":"2026-06-17T04:10:19Z","con
+tent":"Created At: 2026-06-17T04:10:19Z\nCompleted At: 2026-06-17T04:10:21Z\n\n\t\t\t\tThe command completed 
+successfully.\n\t\t\t\tOutput:\n\t\t\t\t<truncated 332 lines>\n+          </div>\n+        ) : (\n+          
+projects.map((project, index) => (\n+            <ProjectItem\n+              
+key={`project-${project.id}-${index}`}\n+              project={project}\n+              
+tasks={getProjectTasks(project.id)}\n+              isExpanded={expandedProjects.has(project.id)}\n+              
+onToggle={() => toggleProject(project.id)}\n+              isSelected={selectedProjectId === project.id}\n+            
+  onSelectProject={() => setSelectedProject(project.id)}\n+              onSelectTask={(taskId) => {\n+                
+setSelectedProject(project.id);\n+                setSelectedTask(taskId);\n+              }}\n+              
+selectedTaskId={selectedTaskId}\n+              onCreateTask={(projectId) => {\n+                
+setSelectedProject(projectId);\n+                setSelectedTask(null); // Clear task selection to show create form\n+ 
+             }}\n+              onDeleteTask={handleDeleteTask}\n+            />\n+          ))\n+        )}\n+      
+</div>\n+      \n+      <CreateProjectModal \n+        isOpen={showCreateModal} \n+        onClose={() => 
+setShowCreateModal(false)} \n+      />\n+      \n+      <ConfirmationModal\n+        
+isOpen={deleteConfirmation.isOpen}\n+        onClose={cancelDeleteTask}\n+        onConfirm={confirmDeleteTask}\n+     
+   title=\"Delete Task\"\n+        message={`Are you sure you want to delete the task 
+\"${deleteConfirmation.taskTitle}\"? This action cannot be undone.`}\n+        confirmText=\"Delete\"\n+        
+cancelText=\"Cancel\"\n+        isDestructive={true}\n+        isLoading={deleteTaskMutation.isPending}\n+      />\n+  
+  </aside>\n+  );\n+}\ndiff --git a/nexusai/frontend/src/components/auth/LoginPage.tsx 
+b/nexusai/frontend/src/components/auth/LoginPage.tsx\nindex df16d4f..0bfcab9 100644\n--- 
+a/nexusai/frontend/src/components/auth/LoginPage.tsx\n+++ b/nexusai/frontend/src/components/auth/LoginPage.tsx\n@@ 
+-7,7 +7,6 @@ import Link from \"next/link\";\n import { toast } from \"sonner\";\n import { Eye, EyeOff, Loader2, 
+ArrowRight } from \"lucide-react\";\n import { useAuthStore } from \"@/store/authStore\";\n-import { 
+sendVerificationEmail } from \"@/lib/auth\";\n import { useAuth } from \"@/hooks/useAuth\";\n import { LogoMark } from 
+\"@/components/brand/LogoMark\";\n import { API_BASE_URL, ApiError } from \"@/lib/api\";\n@@ -86,12 +85,12 @@ type 
+NoticeTone = \"warning\" | \"error\"\n export function LoginPage() {\n   const router = useRouter();\n   const 
+storeLogin = useAuthStore((s) => s.login);\n-  const loginWithFirebaseGoogle = useAuthStore((s) => 
+s.loginWithFirebaseGoogle);\n   const { user, isAuthenticated, isLoading: authChecking } = useAuth();\n   const 
+[email, setEmail] = useState(\"\");\n   const [password, setPassword] = useState(\"\");\n   const [showPw, setShowPw] 
+= useState(false);\n   const [loading, setLoading] = useState(false);\n+  const [redirectTo, setRedirectTo] = 
+useState(\"/dashboard\");\n   const [activeSlide, setActiveSlide] = useState(0);\n   const [backendStatus, 
+setBackendStatus] = useState<BackendStatus>(\"checking\");\n   const [formNotice, setFormNotice] = useState<string | 
+null>(null);\n@@ -110,7 +109,7 @@ export function LoginPage() {\n   const probeBackend = useCallback(async () => {\n   
+  try {\n       setBackendStatus(\"checking\");\n-      const res = await fetch(`${API_BASE_URL}/health`);\n+      
+const res = await fetch(`${API_BASE_URL}/health`, { cache: \"no-store\" });\n       if (res.ok) {\n         
+setBackendStatus(\"online\");\n       } else {\n@@ -125,14 +124,19 @@ export function LoginPage() {\n     void 
+probeBackend();\n   }, [probeBackend]);\n \n+  useEffect(() => {\n+    const params = new 
+URLSearchParams(window.location.search);\n+    setRedirectTo(getSafeRedirectPath(params.get(\"from\")));\n+  }, 
+[]);\n+\n   useEffect(() => {\n     if (authChecking || !isAuthenticated || !user) return;\n     if 
+(!user.is_verified) {\n       router.replace(`/auth/verify-email?email=${encodeURIComponent(user.email)}`);\n       
+return;\n     }\n-    router.replace(\"/dashboard\");\n-  }, [authChecking, isAuthenticated, router, user]);\n+    
+router.replace(redirectTo);\n+  }, [authChecking, isAuthenticated, redirectTo, router, user]);\n \n   const 
+handleSocialSignIn = async (provider: string) => {\n     setFormNotice(null);\n@@ -144,10 +148,8 @@ export function 
+LoginPage() {\n \n     try {\n       setLoading(true);\n-      // Firebase not fully implemented in demo UI\n-      
+throw new Error(`${provider} sign in is not implemented yet.`);\n-      toast.success(`Signed in with ${provider} 
+successfully.`);\n-      router.push(\"/dashboard\");\n+      setFormNoticeTone(\"warning\");\n+      
+setFormNotice(`${provider} sign-in is not connected yet. Please use email and password for now.`);\n     } catch 
+(error) {\n       if (isOfflineAuthError(error)) {\n         setBackendStatus(\"offline\");\n@@ -177,11 +179,21 @@ 
+export function LoginPage() {\n \n     setLoading(true);\n     try {\n-      await storeLogin(normalizedEmail, 
+password);\n+      const session = await storeLogin(normalizedEmail, password);\n       toast.success(\"Signed in 
+successfully.\");\n-      router.push(\"/dashboard\");\n-    } catch (err: unknown) {\n-      toast.error(\"An error 
+occurred during sign in.\");\n+      if (!session.user.is_verified) {\n+        
+router.push(`/auth/verify-email?email=${encodeURIComponent(session.user.email)}`);\n+        return;\n+      }\n+      
+router.push(redirectTo);\n+    } catch (error: unknown) {\n+      if (isOfflineAuthError(error)) {\n+        
+setBackendStatus(\"offline\");\n+      }\n+      const message = getAuthFailureMessage(error, \"Sign in failed. Please 
+check your email and password.\");\n+      setFormNoticeTone(isOfflineAuthError(error) ? \"warning\" : \"error\");\n+  
+    setFormNotice(message);\n+      toast.error(message);\n     } finally {\n       setLoading(false);\n     }\n@@ 
+-494,6 +506,20 @@ export function LoginPage() {\n \n export default LoginPage\n \n+export function 
+getSafeRedirectPath(value: string | null) {\n+  if (\n+    value &&\n+    value.startsWith(\"/\") &&\n+    
+!value.startsWith(\"//\") &&\n+    !value.includes(\":\") &&\n+    !/[\\r\\n\\0]/.test(value)\n+  ) {\n+    return 
+value\n+  }\n+\n+  return \"/dashboard\"\n+}\n+\n export function getAuthFailureMessage(error: unknown, fallback: 
+string) {\n   if (error instanceof ApiError) {\n     if (error.status === 0) {\ndiff --git 
+a/nexusai/frontend/src/components/dashboard/UnifiedDashboard.tsx 
+b/nexusai/frontend/src/components/dashboard/UnifiedDashboard.tsx\nindex 3be6343..b7562f7 100644\n--- 
+a/nexusai/frontend/src/components/dashboard/UnifiedDashboard.tsx\n+++ 
+b/nexusai/frontend/src/components/dashboard/UnifiedDashboard.tsx\n@@ -320,7 +320,7 @@ export function 
+UnifiedDashboard({ overview, apiState }: UnifiedDashboardProps)\n \n             <div className=\"grid gap-4 
+sm:grid-cols-2 lg:grid-cols-5 lg:gap-3\">\n               {overview.workflow.map((step, index) => (\n-                
+<WorkflowStep key={step.id} step={step} index={index} isLast={index === overview.workflow.length - 1} 
+total={overview.workflow.length} />\n+                <WorkflowStep key={step.id} step={step} index={index} 
+isLast={index === overview.workflow.length - 1} />\n               ))}\n             </div>\n           </div>\n@@ 
+-446,7 +446,7 @@ export function UnifiedDashboard({ overview, apiState }: UnifiedDashboardProps)\n                     
+</div>\n                   </article>\n                 ))}\n-              </motion.div>\n+              </div>\n     
+        </section>\n \n             <section className=\"dashboard-panel p-5\">\n@@ -561,6 +561,18 @@ function 
+WorkflowStep({ step, index, isLast }: { step: DashboardOverview[\"workfl\n   )\n }\n \n+function FeatureBadge({ icon: 
+Icon, title, description }: { icon: LucideIcon; title: string; description: string }) {\n+  return (\n+    <div 
+className=\"rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4\">\n+      <div className=\"mb-3 flex h-9 w-9 
+items-center justify-center rounded-xl bg-[#FF6B35]/10 text-[#FF6B35]\">\n+        <Icon strokeWidth={1.6} 
+className=\"h-4.5 w-4.5\" />\n+      </div>\n+      <p className=\"text-sm font-semibold text-white\">{title}</p>\n+   
+   <p className=\"mt-1 text-xs leading-5 text-[#7A8599]\">{description}</p>\n+    </div>\n+  )\n+}\n+\n function 
+DashboardFilters({\n   query,\n   onQueryChange,\n\n"}
+
+

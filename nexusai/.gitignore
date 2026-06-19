@@ -1,0 +1,93 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+
+# Type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+
+# Ruff / linting
+.ruff_cache/
+
+# ── Node / Next.js ────────────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+dist/
+.turbo/
+
+# Testing
+playwright-report/
+test-results/
+coverage/
+
+# ── Environment variables — NEVER commit real secrets ─────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+!backend/.env.example
+!.env.production.example
+
+# ── Alembic ───────────────────────────────────────────────────────────────────
+# Keep migration files but not SQLite test databases
+*.db
+*.sqlite3
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+# Don't ignore docker-compose — it's part of the project
+# Ignore overrides with local secrets
+docker-compose.override.yml
+
+# ── SSL / certificates — NEVER commit private keys ───────────────────────────
+infra/ssl/
+*.pem
+*.key
+*.crt
+*.csr
+dhparam.pem
+
+# ── IDE / OS ──────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+
+# ── Build artefacts ───────────────────────────────────────────────────────────
+*.pyc
+*.pyo
