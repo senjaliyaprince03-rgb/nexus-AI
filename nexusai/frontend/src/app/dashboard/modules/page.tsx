@@ -273,14 +273,14 @@ export default function ModulesPage() {
                     ) : null}
 
                     <div className="mt-4 mb-4 flex flex-wrap gap-2">
-                      {project.capabilities.slice(0, 4).map((capability) => (
+                      {project.capabilities.slice(0, 10).map((capability) => (
                         <span key={capability} className="dashboard-chip inline-flex items-center rounded-full border border-black/10 dark:border-white/10 px-2.5 py-1 text-[11px] font-medium text-[#4B5563] dark:text-[#F8F9FA]">
                           {capability}
                         </span>
                       ))}
-                      {project.capability_count > 4 && (
+                      {project.capability_count > 10 && (
                         <span className="dashboard-chip inline-flex items-center rounded-full border border-black/10 dark:border-white/10 px-2.5 py-1 text-[11px] font-bold text-[#4B5563] dark:text-[#F8F9FA]">
-                          +{project.capability_count - 4} more
+                          +{project.capability_count - 10} more
                         </span>
                       )}
                     </div>

@@ -607,6 +607,11 @@ function ProjectCard({ project }: { project: IntegrationProject }) {
   const displayStatus = project.health === "framework" ? "framework" : project.status === "core" ? "running" : project.health
   const noteText = project.note || PROJECT_NOTES[project.id]
 
+  // If the card has a services section, limit tags to 3 to leave room.
+  // If the card lacks a services section, expand tags up to 10 to fill the empty vertical space!
+  const hasServices = project.services && project.services.length > 0
+  const tagLimit = hasServices ? 3 : 10
+
   return (
     <motion.article initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className="dashboard-card h-full flex flex-col p-6 transition-all duration-300 hover:border-[#D4AF37]/30 hover:shadow-md dark:hover:bg-white/[0.02]">
       <div className="mb-5 flex items-start justify-between gap-4">
@@ -629,19 +634,19 @@ function ProjectCard({ project }: { project: IntegrationProject }) {
       ) : null}
 
       <div className="mt-4 mb-4 flex flex-wrap gap-2">
-        {project.capabilities.slice(0, 3).map((capability) => (
+        {project.capabilities.slice(0, tagLimit).map((capability) => (
           <span key={capability} className="dashboard-chip inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 px-3 py-1 text-[11px] font-medium text-[#4B5563] dark:text-[#F8F9FA] leading-none">
             {capability}
           </span>
         ))}
-        {project.capability_count > 3 && (
+        {project.capability_count > tagLimit && (
           <span className="dashboard-chip inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 px-3 py-1 text-[11px] font-bold text-[#4B5563] dark:text-[#F8F9FA] leading-none">
-            +{project.capability_count - 3} more
+            +{project.capability_count - tagLimit} more
           </span>
         )}
       </div>
 
-      {isCore && project.services.length > 0 && (
+      {hasServices && (
         <div className="mb-4 flex flex-wrap gap-2 border-t border-black/5 dark:border-[#F8F9FA]/5 pt-4">
           {project.services.map((service) => (
             <span key={service.id} title={`${service.name}: ${serviceHealthLabel(service.health)}`} className="dashboard-chip inline-flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium text-[#94a3b8] dark:text-[#E5E7EB] leading-none">
