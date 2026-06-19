@@ -4,9 +4,9 @@
   "scripts": {
     "gateway": "python nexus_master_api.py",
     "validate:integrations": "python scripts/validate_integrations.py",
-    "dev": "node scripts/dev.js",
-    "build": "npm --prefix nexusai/frontend run build",
-    "start": "npm --prefix nexusai/frontend run start",
+    "dev": "node init && node scripts/dev.js",
+    "build": "node init && npm --prefix nexusai/frontend run build",
+    "start": "node init && npm --prefix nexusai/frontend run start",
     "lint": "npm --prefix nexusai/frontend run lint",
     "type-check": "npm --prefix nexusai/frontend run type-check",
     "test": "npm --prefix nexusai/frontend run test",

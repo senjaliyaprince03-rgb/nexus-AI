@@ -3,8 +3,6 @@ __pycache__/
 **/__pycache__/
 *.pyc
 *.pyo
-.env
-.env.local
 **/.env.local
 .venv/
 **/.venv/
@@ -31,11 +29,13 @@ apps/*/.git/
 packages/*/.git/
 
 # Local Environment and Secrets
-**/.env
-**/.env.*
 !**/.env*.example
 
 # Incident Backups
 *.bak
 git_history_*.txt
 backup_logs_*/
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+config.bat
