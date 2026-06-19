@@ -251,30 +251,33 @@ export default function ModulesPage() {
 
                     <p className="min-h-[72px] text-sm leading-6 text-[#4B5563] dark:text-[#D1D5DB]">{project.summary}</p>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="mt-4 rounded-xl border border-black/5 dark:border-[#F8F9FA]/8 bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
+                      {project.status === "integrated" || project.health === "framework"
+                        ? "Integrated into NexusAI. This feature opens in the dashboard and does not require a separate local app."
+                        : "The primary workspace running locally. Opens directly inside the dashboard."}
+                    </div>
+
+                    <div className="mt-4 mb-4 flex flex-wrap gap-2">
                       {project.capabilities.slice(0, 4).map((capability) => (
-                        <span key={capability} className="dashboard-chip inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium text-[#4B5563] dark:text-[#D1D5DB]">
+                        <span key={capability} className="dashboard-chip inline-flex items-center rounded-full border border-black/10 dark:border-white/10 px-2.5 py-1 text-[11px] font-medium text-[#4B5563] dark:text-[#F8F9FA]">
                           {capability}
                         </span>
                       ))}
                       {project.capability_count > 4 && (
-                        <span className="dashboard-chip inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold text-[#C5A059] dark:text-[#C5A059]">
+                        <span className="dashboard-chip inline-flex items-center rounded-full border border-black/10 dark:border-white/10 px-2.5 py-1 text-[11px] font-bold text-[#4B5563] dark:text-[#F8F9FA]">
                           +{project.capability_count - 4} more
                         </span>
                       )}
                     </div>
 
-                    <div className="mt-auto pt-5 flex items-center justify-between gap-3 border-t border-black/5 dark:border-[#F8F9FA]/8">
-                      <span className="text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
-                        {project.status === "integrated"
-                          ? "This imported project is surfaced through NexusAI routes."
-                          : project.health === "framework"
-                            ? "Framework tools are represented as dashboard surfaces."
-                            : "Core workspace remains inside the main app surface."}
-                      </span>
-                      <Link href={project.native_href} onClick={(event) => event.stopPropagation()} className="inline-flex items-center gap-1 text-xs font-semibold text-[#C5A059]">
-                        Open in NexusAI
-                        <ArrowRight className="h-3.5 w-3.5" />
+                    <div className="mt-auto pt-2">
+                      <Link 
+                        href={project.native_href} 
+                        onClick={(event) => event.stopPropagation()} 
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B8962D] px-4 py-3 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(212,175,55,0.35)] hover:shadow-[0_8px_30px_rgba(212,175,55,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                      >
+                        {project.primary_action || "Launch"}
+                        <ArrowRight className="h-4 w-4" />
                       </Link>
                     </div>
                   </button>
