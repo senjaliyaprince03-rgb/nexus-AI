@@ -610,26 +610,33 @@ function ProjectCard({ project }: { project: IntegrationProject }) {
         <StatusChip status={displayStatus} />
       </div>
       <p className="line-clamp-3 min-h-[72px] text-[15px] leading-relaxed text-[#4B5563] dark:text-[#AEB6C3]">{project.summary}</p>
-      
-      <div className="mt-auto pt-6">
-        <div className="flex items-center justify-between border-t border-black/5 dark:border-[#F8F9FA]/5 pt-5">
-          <div className="flex flex-wrap gap-2">
-            {project.capabilities.slice(0, 3).map((capability) => (
-              <span key={capability} className="dashboard-chip inline-flex items-center justify-center rounded-full px-3 py-1 text-[11px] font-medium text-[#4B5563] dark:text-[#F3F4F6] leading-none">
-                {capability}
-              </span>
-            ))}
-            {project.capability_count > 3 && (
-              <span className="dashboard-chip inline-flex items-center justify-center rounded-full px-3 py-1 text-[11px] font-semibold text-[#D4AF37] leading-none">
-                +{project.capability_count - 3}
-              </span>
-            )}
-          </div>
-          <Link href={project.native_href} className="group inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-full border border-black/10 dark:border-[#F8F9FA]/10 bg-transparent px-5 py-2 text-[13px] font-semibold text-[#18181B] dark:text-[#F8F9FA] transition hover:bg-black/5 dark:hover:bg-white/5 hover:border-[#D4AF37]/50 dark:hover:border-[#D4AF37]/50">
-            Launch
-            <ArrowRight className="h-3.5 w-3.5 text-[#9CA3AF] transition group-hover:translate-x-1 group-hover:text-[#D4AF37]" />
-          </Link>
-        </div>
+      <div className="mt-4 rounded-xl border border-black/5 dark:border-[#F8F9FA]/8 bg-black/[0.02] dark:bg-[#1A1A1A] p-4 text-xs leading-5 text-[#6A6A6A] dark:text-[#D1D5DB]">
+        {project.status === "integrated" || project.health === "framework"
+          ? "Integrated into NexusAI. This feature opens in the dashboard and does not require a separate local app."
+          : "The primary workspace running locally. Opens directly inside the dashboard."}
+      </div>
+
+      <div className="mt-4 mb-4 flex flex-wrap gap-2">
+        {project.capabilities.slice(0, 3).map((capability) => (
+          <span key={capability} className="dashboard-chip inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 px-3 py-1 text-[11px] font-medium text-[#4B5563] dark:text-[#F8F9FA] leading-none">
+            {capability}
+          </span>
+        ))}
+        {project.capability_count > 3 && (
+          <span className="dashboard-chip inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 px-3 py-1 text-[11px] font-bold text-[#4B5563] dark:text-[#F8F9FA] leading-none">
+            +{project.capability_count - 3} more
+          </span>
+        )}
+      </div>
+
+      <div className="mt-auto pt-2">
+        <Link 
+          href={project.native_href} 
+          className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B8962D] px-4 py-3 text-[13px] font-semibold text-white shadow-[0_4px_20px_rgba(212,175,55,0.35)] hover:shadow-[0_8px_30px_rgba(212,175,55,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+        >
+          {project.primary_action || "Launch"}
+          <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+        </Link>
       </div>
       {isCore && project.services.length > 0 && (
         <div className="mt-5 flex flex-wrap gap-2 border-t border-black/5 dark:border-[#F8F9FA]/5 pt-4">
