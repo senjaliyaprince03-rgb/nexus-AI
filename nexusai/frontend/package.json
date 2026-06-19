@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "predev": "node scripts/clean-next-artifacts.mjs --dev",
-    "dev": "node scripts/dev-server.js",
+    "dev": "node init && node scripts/dev-server.js",
     "prebuild": "node scripts/clean-next-artifacts.mjs --build",
-    "build": "next build",
-    "start": "next start",
+    "build": "node init && next build",
+    "start": "node init && next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "vitest",
