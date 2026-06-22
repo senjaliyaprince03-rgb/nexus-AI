@@ -35,13 +35,6 @@ export function useAuth(options: UseAuthOptions = {}) {
   const store  = useAuthStore()
   const { user, isAuthenticated, isLoading, sessionChecked, login, logout, fetchUser, clearAuth } = store
 
-  // Bootstrap: validate persisted auth state or refresh cookies once per app load.
-  useEffect(() => {
-    if (!sessionChecked && !isLoading) {
-      void fetchUser()
-    }
-  }, [fetchUser, isLoading, sessionChecked])
-
   // requireAuth redirect
   useEffect(() => {
     if (options.requireAuth && sessionChecked && !isLoading && !isAuthenticated) {

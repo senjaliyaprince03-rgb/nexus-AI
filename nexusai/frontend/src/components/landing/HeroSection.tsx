@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import { type CSSProperties } from "react"
 import { Button } from "@/components/ui/button"
+import { useI18n } from "@/lib/i18n"
 
 const settleTransition = {
   duration: 1.05,
@@ -76,11 +77,12 @@ function HeroImage3D() {
 }
 
 export function HeroSection() {
+  const { t } = useI18n()
   const primaryHref = "/signup"
   const secondaryHref = "/login"
 
   return (
-    <section className="relative overflow-hidden bg-[var(--landing-bg)] px-6 sm:px-8 lg:px-12 pt-40 pb-24 lg:pb-32 text-[var(--landing-text)]">
+    <section className="relative overflow-hidden bg-[var(--landing-bg)] pt-40 pb-24 lg:pb-32 text-[var(--landing-text)]">
       {/* Very subtle background pattern */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.04] bg-[radial-gradient(circle_at_center,var(--landing-text)_1px,transparent_1px)]"
@@ -89,7 +91,7 @@ export function HeroSection() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-[var(--landing-bg)]" />
 
       {/* Main hero content */}
-      <div className="relative z-10 mx-auto max-w-7xl">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
           {/* Left Column: Copy & CTA */}
           <div className="max-w-2xl">
@@ -98,78 +100,76 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="mb-6 inline-flex items-center rounded-full border border-[var(--landing-border)]
-                         bg-[var(--landing-surface-strong)] px-3 py-1.5 text-sm text-[var(--landing-text-secondary)] shadow-sm"
+                         bg-[var(--landing-surface-strong)] px-3 py-1 text-xs font-semibold
+                         text-[var(--landing-text)] shadow-sm backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-sm"
             >
-              <span className="flex h-2 w-2 rounded-full bg-[#7CB69E] mr-2 animate-pulse" />
-              NexusAI v2 is now live
+              <span className="mr-2 flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+              {t("landing.hero.badge")}
             </motion.div>
 
             <motion.h1
-              initial={false}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-[1.05]
-                         tracking-[-0.02em] text-[var(--landing-text)] mb-6"
+              transition={{ duration: 0.5, delay: 0.05 }}
+              className="mb-6 text-[2.75rem] font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-[4.2rem]"
             >
-              Behind every answer:
-              <br />
-              <span className="italic text-[#C5A059] font-serif font-normal">your documents</span>
+              <span className="block">{t("landing.hero.title1")}</span>
+              <span className="block font-serif italic text-[#C5A059]">
+                {t("landing.hero.title2")}
+              </span>
             </motion.h1>
 
             <motion.p
-              initial={false}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="mb-8 max-w-[480px] text-lg leading-relaxed text-[var(--landing-text-secondary)]"
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="mb-10 max-w-xl text-lg leading-relaxed text-[var(--landing-text-secondary)] sm:text-xl whitespace-pre-line"
             >
-              Upload any document. Ask anything in plain
-              <br />
-              English. Get answers backed by numbered citations
-              <br />
-              from the exact source passages.
+              {t("landing.hero.subtitle").replace(/\\n/g, "\n")}
             </motion.p>
 
             <motion.div
-              initial={false}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-wrap gap-3 mb-8"
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="flex flex-col sm:flex-row gap-4"
             >
-              <Button href={primaryHref} variant="primary" size="lg">
-                Start Free
+              <Button href={primaryHref} variant="primary" size="lg" className="px-8 font-semibold shadow-lg shadow-[var(--landing-primary)]/20">
+                {t("landing.hero.startFree")}
               </Button>
-              <Button href={secondaryHref} variant="secondary" size="lg">
-                Log in
+              <Button href={secondaryHref} variant="secondary" size="lg" className="px-8 font-semibold group bg-white dark:bg-white text-black hover:bg-neutral-100 dark:hover:bg-neutral-200">
+                {t("landing.hero.login")}
               </Button>
             </motion.div>
 
             <motion.p
-              initial={false}
+              initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-sm text-[var(--landing-text-muted)]"
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="mt-6 text-[13px] text-[var(--landing-text-muted)] flex items-center gap-2"
             >
-              No setup. No API key. Works in 60 seconds.
+              {t("landing.hero.noSetup")}
             </motion.p>
 
             {/* Stats row */}
             <motion.div
-              initial={false}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="flex items-center gap-8 mt-10 pt-8
-                         border-t border-[var(--landing-border)]"
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="mt-12 grid grid-cols-3 gap-6 border-t border-[var(--landing-border-soft)] pt-8 lg:mt-16"
             >
               {[
-                { value: "28%", label: "reduction in agentic time" },
-                { value: "5", label: "expert AI agents" },
-                { value: "< 3s", label: "average response time" },
-              ].map(s => (
-                <div key={s.label}>
-                  <div className="text-xl font-semibold text-[var(--landing-text)]">
-                    {s.value}
+                { value: t("landing.hero.stat1.value"), label: t("landing.hero.stat1.label") },
+                { value: t("landing.hero.stat2.value"), label: t("landing.hero.stat2.label") },
+                { value: t("landing.hero.stat3.value"), label: t("landing.hero.stat3.label") },
+              ].map((stat, idx) => (
+                <div key={idx}>
+                  <div className="text-2xl font-bold tracking-tight text-[var(--landing-text)]">
+                    {stat.value}
                   </div>
-                  <div className="mt-0.5 text-xs text-[var(--landing-text-muted)]">{s.label}</div>
+                  <div className="mt-1 text-xs text-[var(--landing-text-muted)] leading-relaxed">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </motion.div>

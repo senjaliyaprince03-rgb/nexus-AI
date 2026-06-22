@@ -120,7 +120,7 @@ describe("UnifiedDashboard", () => {
     render(<UnifiedDashboard overview={overview} apiState={{ status: "live" }} />)
 
     expect(screen.getByText(/All imported capabilities are available/i)).toBeTruthy()
-    expect(screen.getAllByText("Open in NexusAI").length).toBeGreaterThan(0)
+    expect(screen.getAllByText("Launch Workspace").length).toBeGreaterThan(0)
     expect(screen.queryByText(/unknown/i)).toBeNull()
     expect(screen.queryByText(/Not checked/i)).toBeNull()
     expect(screen.queryByText("Open local app")).toBeNull()
@@ -140,5 +140,14 @@ describe("UnifiedDashboard", () => {
 
     expect(screen.getAllByText("Open workspace").length).toBeGreaterThan(0)
     expect(screen.getAllByText("Open deep research").length).toBeGreaterThan(0)
+  })
+
+  it("uses the custom select treatment for the system filter", () => {
+    render(<UnifiedDashboard overview={overview} apiState={{ status: "live" }} />)
+
+    const categoryFilter = screen.getByDisplayValue("All systems")
+    expect(categoryFilter.className).toContain("dashboard-select")
+    expect(categoryFilter.className).toContain("pr-12")
+    expect(categoryFilter.className).toContain("pl-10")
   })
 })

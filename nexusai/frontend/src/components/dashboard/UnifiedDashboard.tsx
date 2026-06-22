@@ -12,6 +12,7 @@ import {
   Boxes,
   BrainCircuit,
   CheckCircle2,
+  ChevronDown,
   Clock,
   Database,
   FileStack,
@@ -566,20 +567,20 @@ function DashboardFilters({
   return (
     <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
       <label className="relative min-w-0 flex-1 lg:w-72">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF] dark:text-[#AEB6C3]" />
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF] dark:text-[#AEB6C3]" />
         <input
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Search systems or modules"
-          className="dashboard-input h-11 w-full rounded-2xl pl-9 pr-3 text-sm outline-none transition focus:border-[#D4AF37]/50 focus:bg-white dark:focus:bg-[#1A1A1A] dark:focus:border-[#D4AF37]/70"
+          className="dashboard-input h-11 w-full rounded-2xl pl-10 pr-4 text-base font-medium leading-5 outline-none transition placeholder:font-normal focus:border-[#D4AF37]/50 focus:bg-white dark:focus:bg-[#1A1A1A] dark:focus:border-[#D4AF37]/70 sm:text-[14px]"
         />
       </label>
-      <label className="relative">
-        <Filter className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF] dark:text-[#AEB6C3]" />
+      <label className="relative isolate overflow-hidden rounded-2xl bg-[#F9FAFB] dark:bg-[#0A1628] sm:w-64">
+        <Filter className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF] dark:text-[#AEB6C3]" />
         <select
           value={category}
           onChange={(event) => onCategoryChange(event.target.value)}
-          className="dashboard-input h-11 w-full rounded-2xl pl-9 pr-8 text-sm outline-none transition focus:border-[#D4AF37]/50 focus:bg-white dark:focus:bg-[#1A1A1A] dark:focus:border-[#D4AF37]/70 sm:w-64"
+          className="dashboard-input dashboard-select h-11 w-full rounded-2xl pl-10 pr-12 text-base font-medium leading-5 outline-none transition focus:border-[#D4AF37]/50 focus:bg-white dark:focus:bg-[#1A1A1A] dark:focus:border-[#D4AF37]/70 sm:text-[14px]"
         >
           {categories.map((item) => (
             <option key={item} value={item}>
@@ -587,6 +588,10 @@ function DashboardFilters({
             </option>
           ))}
         </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280] dark:text-[#AEB6C3]"
+        />
       </label>
     </div>
   )
@@ -735,10 +740,9 @@ function toneClasses(tone: DashboardMetric["tone"]) {
 }
 
 function statusChipClasses(status: string) {
-  if (status === "online" || status === "live" || status === "mapped" || status === "ready" || status === "complete") {
+  if (status === "online" || status === "live" || status === "mapped" || status === "ready" || status === "complete" || status === "running") {
     return "bg-[#EDF5F1] text-[#276749] dark:bg-transparent dark:text-[#7CB69E]"
   }
-  if (status === "running") return "bg-[#EEF4FF] text-[#2356C8] dark:bg-transparent dark:text-[#3B6FE8]"
   if (status === "queued" || status === "checking") return "bg-[#FFF7E8] text-[#8A7535] dark:bg-transparent dark:text-[#D4AF37]"
   if (status === "waiting" || status === "unknown") return "bg-[#F4F4F3] text-[#94a3b8] dark:bg-transparent dark:text-[#A1A1AA]"
   if (status === "core" || status === "framework") return "bg-[#EEF2FF] text-[#3730A3] dark:bg-transparent dark:text-[#A78BFA]"
@@ -750,8 +754,7 @@ function statusChipClasses(status: string) {
 }
 
 function healthDot(status: string) {
-  if (status === "online" || status === "live" || status === "mapped" || status === "ready" || status === "complete") return "bg-[#7CB69E]"
-  if (status === "running") return "bg-[#3B6FE8]"
+  if (status === "online" || status === "live" || status === "mapped" || status === "ready" || status === "complete" || status === "running") return "bg-[#7CB69E]"
   if (status === "queued" || status === "checking") return "bg-[#D4AF37]"
   if (status === "waiting" || status === "unknown") return "bg-[#A1A1AA]"
   if (status === "offline" || status === "failed") return "bg-[#D4AF37]"

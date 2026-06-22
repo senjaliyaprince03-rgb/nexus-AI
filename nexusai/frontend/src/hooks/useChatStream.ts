@@ -12,10 +12,9 @@
  */
 
 import { useCallback, useRef } from "react"
-import { useRouter } from "next/navigation"
 import { v4 as uuidv4 } from "uuid"
 
-import { getToken, ApiError } from "@/lib/api"
+import { getToken } from "@/lib/api"
 import { useChatStore } from "@/store/chatStore"
 import type { QueryRequest, StreamEvent } from "@/types/api"
 
@@ -72,7 +71,6 @@ interface UseChatStreamReturn {
 }
 
 export function useChatStream(): UseChatStreamReturn {
-  const router = useRouter()
   const abortRef = useRef<AbortController | null>(null)
 
   const store = useChatStore()
@@ -87,7 +85,6 @@ export function useChatStream(): UseChatStreamReturn {
     finalizeStream,
     failStream,
     addSession,
-    updateSessionTitle,
   } = store
 
   const cancel = useCallback(() => {
@@ -202,13 +199,14 @@ export function useChatStream(): UseChatStreamReturn {
 
                 // If this is a new session, register it in sidebar
                 if (!activeSessionId) {
+                  const currentMessages = useChatStore.getState().messages
                   addSession({
                     id: d.session_id,
                     title: question.slice(0, 60),
                     workspace_id: workspaceId,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString(),
-                    messages: [],
+                    messages: currentMessages,
                     mode: body.mode,
                     metadata: {
                       support_intent: body.support_intent,

@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
+import { cookies } from "next/headers"
 import "./globals.css"
 import { Providers } from "./providers"
+import type { Language } from "@/locales/translations"
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
@@ -40,10 +42,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const cookieStore = cookies()
+  const cookieLanguage = cookieStore.get("nexusai-language")?.value
+  const initialLanguage: Language =
+    cookieLanguage === "es" || cookieLanguage === "fr" || cookieLanguage === "de" ? cookieLanguage : "en"
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={initialLanguage} suppressHydrationWarning>
       <body className="font-sans bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased">
-        <Providers>
+        <Providers initialLanguage={initialLanguage}>
           {children}
           <CookieBanner />
         </Providers>

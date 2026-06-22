@@ -6,12 +6,15 @@ import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { LogoMark } from "@/components/brand/LogoMark"
 import { Button } from "@/components/ui/button"
+import { CircularLanguageDropdown } from "@/components/ui/CircularLanguageDropdown"
+import { useI18n } from "@/lib/i18n"
+import type { TranslationKey } from "@/locales/translations"
 
-const LINKS = [
-  { label: "How it works", href: "/#how-it-works" },
-  { label: "Features",     href: "/#features" },
-  { label: "Pricing",      href: "/#pricing" },
-  { label: "Experts",      href: "/#experts" },
+const LINKS: { labelKey: TranslationKey, href: string }[] = [
+  { labelKey: "landing.nav.howItWorks", href: "/#how-it-works" },
+  { labelKey: "landing.nav.features",     href: "/#features" },
+  { labelKey: "landing.nav.pricing",      href: "/#pricing" },
+  { labelKey: "landing.nav.experts",      href: "/#experts" },
 ]
 
 export function Navbar() {
@@ -19,6 +22,7 @@ export function Navbar() {
   const [menuOpen, setMenuOpen]   = useState(false)
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
+  const { t } = useI18n()
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20)
@@ -47,7 +51,7 @@ export function Navbar() {
           }
         `}
       >
-        <nav className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
+        <nav className="max-w-[1440px] mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <LogoMark className="h-10 w-10 rounded-lg transition-transform duration-200 group-hover:scale-110" priority />
@@ -65,7 +69,7 @@ export function Navbar() {
                 className="rounded-full px-5 py-2.5 text-[15px] font-medium text-[var(--landing-text-secondary)]
                            transition-all duration-150 hover:bg-[var(--landing-surface-strong)] hover:text-[var(--landing-text)]"
               >
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             ))}
           </div>
@@ -75,17 +79,18 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setTheme(isDark ? "light" : "dark")}
-              className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--landing-border)] bg-[var(--landing-surface)] text-[var(--landing-text-secondary)] shadow-sm transition hover:border-[var(--landing-border-soft)] hover:text-[var(--landing-text)]"
+              className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--landing-border)] bg-[var(--landing-surface)] text-[var(--landing-text-secondary)] shadow-sm transition hover:border-[var(--landing-border-soft)] hover:text-[var(--landing-text)]"
               aria-label="Toggle theme"
             >
-              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <Sun className="h-6 w-6 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </button>
+            <CircularLanguageDropdown />
             <Button href={loginHref} variant="ghost" className="px-6 !text-[var(--landing-text-secondary)] hover:!bg-[var(--landing-surface-strong)] hover:!text-[var(--landing-text)]">
-              {loginLabel}
+              {t("landing.nav.login")}
             </Button>
             <Button href={signupHref} variant="primary" className="px-6">
-              {signupLabel}
+              {t("landing.nav.getStarted")}
             </Button>
           </div>
 
@@ -110,7 +115,7 @@ export function Navbar() {
           transition={{ duration: 0.18 }}
           className="fixed inset-x-0 top-16 z-40 border-b border-[var(--landing-border)] bg-[var(--landing-bg)] shadow-[0_12px_30px_rgba(0,0,0,0.25)] md:hidden"
         >
-          <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1">
+          <div className="max-w-[1440px] mx-auto px-6 py-4 flex flex-col gap-1">
               {LINKS.map(link => (
                 <Link
                   key={link.href}
@@ -118,24 +123,27 @@ export function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="rounded-xl px-4 py-3 text-sm text-[var(--landing-text-secondary)] transition-colors hover:bg-[var(--landing-surface-strong)] hover:text-[var(--landing-text)]"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               ))}
               <div className="mt-1 flex gap-3 border-t border-[var(--landing-border)] pt-3">
                 <button
                   type="button"
                   onClick={() => setTheme(isDark ? "light" : "dark")}
-                  className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--landing-border)] bg-[var(--landing-surface)] text-[var(--landing-text-secondary)] shadow-sm transition hover:border-[var(--landing-border-soft)] hover:text-[var(--landing-text)]"
+                  className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--landing-border)] bg-[var(--landing-surface)] text-[var(--landing-text-secondary)] shadow-sm transition hover:border-[var(--landing-border-soft)] hover:text-[var(--landing-text)]"
                   aria-label="Toggle theme"
                 >
-                  <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                  <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <Sun className="h-6 w-6 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                 </button>
+                <div className="flex items-center justify-center">
+                  <CircularLanguageDropdown />
+                </div>
                 <Button href={loginHref} variant="secondary" size="sm" className="flex-1">
-                  {loginLabel}
+                  {t("landing.nav.login")}
                 </Button>
                 <Button href={signupHref} variant="primary" size="sm" className="flex-1">
-                  {signupLabel}
+                  {t("landing.nav.getStarted")}
                 </Button>
               </div>
             </div>

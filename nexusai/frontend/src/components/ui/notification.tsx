@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { LogoMark } from "@/components/brand/LogoMark"
 
 interface NotificationCardProps {
   aiName?: string
@@ -36,9 +37,7 @@ export default function NotificationCard({
           className="relative mb-4 flex items-center"
         >
           <div className="relative mr-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-green-800 text-xl font-bold text-white">
-              {aiName[0]}
-            </div>
+            <LogoMark className="h-10 w-10 rounded-xl shadow-[0_10px_24px_rgba(255,107,53,0.18)]" />
           </div>
 
           <span className="text-lg font-semibold text-slate-600">{aiName}</span>

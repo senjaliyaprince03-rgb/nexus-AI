@@ -65,7 +65,7 @@ async def _probe_service(health_path: str | None) -> str:
             urlunparse(parsed._replace(netloc=f"host.docker.internal:{parsed.port}" if parsed.port else "host.docker.internal"))
         )
 
-    async with httpx.AsyncClient(timeout=0.45, follow_redirects=True) as client:
+    async with httpx.AsyncClient(timeout=1.5, follow_redirects=True) as client:
         for probe_url in probe_urls:
             try:
                 response = await client.get(probe_url)

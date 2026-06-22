@@ -9,11 +9,58 @@ import { useTheme } from "next-themes"
 import { LogoMark } from "@/components/brand/LogoMark"
 import { useAuth } from "@/hooks/useAuth"
 import { useNotificationStore } from "@/store/notificationStore"
+import { useI18n } from "@/lib/i18n"
+import type { Language } from "@/locales/translations"
+
+const TOPBAR_LABELS: Record<Language, { upgrade: string; workspaceActive: string; unread: string; now: string; recently: string; minutesAgo: string; hoursAgo: string; daysAgo: string }> = {
+  en: {
+    upgrade: "Upgrade to Pro",
+    workspaceActive: "Workspace Active",
+    unread: "unread",
+    now: "now",
+    recently: "recently",
+    minutesAgo: "m ago",
+    hoursAgo: "h ago",
+    daysAgo: "d ago",
+  },
+  es: {
+    upgrade: "Actualizar a Pro",
+    workspaceActive: "Espacio activo",
+    unread: "sin leer",
+    now: "ahora",
+    recently: "reciente",
+    minutesAgo: "min",
+    hoursAgo: "h",
+    daysAgo: "d",
+  },
+  fr: {
+    upgrade: "Passer a Pro",
+    workspaceActive: "Espace actif",
+    unread: "non lus",
+    now: "maintenant",
+    recently: "recent",
+    minutesAgo: "min",
+    hoursAgo: "h",
+    daysAgo: "j",
+  },
+  de: {
+    upgrade: "Auf Pro wechseln",
+    workspaceActive: "Arbeitsbereich aktiv",
+    unread: "ungelesen",
+    now: "jetzt",
+    recently: "vor kurzem",
+    minutesAgo: "Min.",
+    hoursAgo: "Std.",
+    daysAgo: "T.",
+  },
+}
 
 export function Topbar({ title }: { title?: string }) {
   const { user, logout, isAdmin, isLoading } = useAuth()
   const router = useRouter()
-  const { theme, setTheme } = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
+  const { t, language } = useI18n()
+  const copy = TOPBAR_LABELS[language] || TOPBAR_LABELS.en
   const [showNotifications, setShowNotifications] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const notifications = useNotificationStore((state) => state.notifications)
@@ -22,18 +69,19 @@ export function Topbar({ title }: { title?: string }) {
   const unreadNotifications = useMemo(() => notifications.filter((notification) => notification.unread), [notifications])
   const unreadCount = unreadNotifications.length
 
-  const displayName =
-    [user?.first_name, user?.last_name].filter(Boolean).join(" ") ||
+  const displayId =
     user?.email?.split("@")[0] ||
-    (isLoading ? "Loading account" : "Account")
-  const displayEmail = user?.email || (isLoading ? "Checking saved session..." : "No active session")
+    user?.first_name ||
+    user?.id ||
+    (isLoading ? t("checkingSession") : t("account"))
+  const displayEmail = user?.email || (isLoading ? t("checkingSession") : t("noSession"))
 
   const handleUpgradeClick = () => {
     router.push("/dashboard/billing")
   }
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
+    setTheme(resolvedTheme === "dark" ? "light" : "dark")
   }
 
   useEffect(() => {
@@ -60,12 +108,12 @@ export function Topbar({ title }: { title?: string }) {
   }, [showNotifications])
 
   return (
-    <header className="sticky top-0 z-20 border-b border-[rgba(0,0,0,0.08)] bg-white/80 px-5 backdrop-blur-2xl dark:border-[rgba(255,255,255,0.08)] dark:bg-transparent">
-      <div className="mx-auto flex h-[78px] max-w-[calc(100%-1rem)] items-center justify-between gap-4 rounded-b-[28px] border-x border-[rgba(0,0,0,0.06)] px-2 dark:border-[rgba(255,255,255,0.06)]">
-        <div className="flex min-w-0 items-center gap-3">
+    <header className="sticky top-0 z-20 border-b border-[rgba(0,0,0,0.08)] bg-white px-5 backdrop-blur-2xl dark:border-[rgba(255,255,255,0.08)] dark:bg-transparent">
+      <div className="mx-auto flex h-[78px] max-w-[calc(100%-1rem)] items-center justify-between gap-5 border-x border-[rgba(0,0,0,0.06)] px-4 dark:border-[rgba(255,255,255,0.06)]">
+        <div className="flex min-w-0 items-center gap-4">
           <LogoMark className="hidden h-11 w-11 rounded-2xl lg:inline-flex" priority />
           <div className="min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF] dark:text-[#71717A]">Control Room</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#B0B7C3] dark:text-[#71717A]">{t("controlRoom")}</p>
             <span className="block truncate font-display text-2xl tracking-[-0.03em] text-[#18181B] dark:text-[#F8F9FA]">
               {title ?? "NexusAI"}
             </span>
@@ -77,36 +125,36 @@ export function Topbar({ title }: { title?: string }) {
             whileHover={{ y: -1, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleUpgradeClick}
-            className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-[#C5A059] to-[#FF8C35] px-4 py-1.5 text-xs font-semibold text-white shadow-[0_2px_10px_rgba(255,107,53,0.3)] md:flex"
+            className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-[#D69B3C] to-[#FF8C35] px-5 py-2 text-xs font-semibold text-white shadow-[0_2px_10px_rgba(255,107,53,0.28)] md:flex"
           >
             <Zap strokeWidth={1.75} className="h-4 w-4 fill-current transition-transform group-hover:scale-110" />
-            Upgrade to Pro
+            {copy.upgrade}
           </motion.button>
 
           {user?.workspace_id && (
-            <div className="hidden items-center gap-2 rounded-full border border-[rgba(0,0,0,0.08)] bg-[#F8F9FA] px-3 py-1.5 text-xs font-medium text-[#4B5563] md:flex">
+            <div className="hidden min-h-[42px] items-center gap-2 rounded-full border border-[rgba(0,0,0,0.08)] bg-[#FAFAFA] px-4 py-2 text-xs font-semibold text-[#64748B] shadow-[0_1px_2px_rgba(0,0,0,0.02)] md:flex dark:border-[rgba(255,255,255,0.1)] dark:bg-[#18181A] dark:text-[#D4D4D8]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#7CB69E] shadow-[0_0_8px_rgba(124,182,158,0.8)] animate-pulse" />
-              <span>Workspace Active</span>
+              <span>{copy.workspaceActive}</span>
             </div>
           )}
           {isAdmin && (
             <span className="hidden items-center gap-1 rounded-full border border-[#C5A059]/30 bg-[rgba(212,175,55,0.08)] px-3 py-1 text-xs text-[#C5A059] md:inline-flex">
               <ShieldCheck strokeWidth={1.75} className="h-4 w-4" />
-              Admin
+              {t("admin")}
             </span>
           )}
 
-          <div className="hidden select-none border-l border-[rgba(0,0,0,0.08)] pl-4 text-right sm:block dark:border-[rgba(255,255,255,0.1)]">
-            <p className="text-sm font-medium text-[#18181B] dark:text-[#F8F9FA]">{displayName}</p>
-            <p className="text-[11px] text-[#9CA3AF] dark:text-[#A1A1AA]">{displayEmail}</p>
+          <div className="hidden min-h-[50px] min-w-[210px] select-none border-l border-[rgba(0,0,0,0.08)] pl-5 text-center sm:flex sm:flex-col sm:justify-center dark:border-[rgba(255,255,255,0.1)]">
+            <p className="truncate text-sm font-semibold leading-5 text-[#3F3F46] dark:text-[#F8F9FA]">{displayId}</p>
+            <p className="truncate text-[11px] leading-4 text-[#A1A1AA] dark:text-[#A1A1AA]">{displayEmail}</p>
           </div>
 
-          <div className="ml-2 flex items-center gap-2 border-l border-[rgba(0,0,0,0.08)] pl-4 dark:border-[rgba(255,255,255,0.1)]">
+          <div className="ml-1 flex items-center gap-2 border-l border-[rgba(0,0,0,0.08)] pl-5 dark:border-[rgba(255,255,255,0.1)]">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleTheme}
-              className="relative rounded-full p-2 text-[#4B5563] transition-colors hover:bg-[#F8F9FA] dark:text-[#A1A1AA] dark:hover:bg-[#2A2A2A]"
+              className="relative rounded-full p-2 text-[#6B7280] transition-colors hover:bg-[#F8F9FA] dark:text-[#A1A1AA] dark:hover:bg-[#2A2A2A]"
               aria-label="Toggle theme"
             >
               <Sun strokeWidth={1.75} className="h-4 w-4 rotate-0 scale-100 transition-all duration-300 dark:-rotate-90 dark:scale-0 group-hover:rotate-12" />
@@ -118,7 +166,7 @@ export function Topbar({ title }: { title?: string }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowNotifications((value) => !value)}
-                className="relative rounded-full p-2 text-[#4B5563] transition-colors hover:bg-[#F8F9FA] dark:text-[#A1A1AA] dark:hover:bg-[#2A2A2A]"
+                className="relative rounded-full p-2 text-[#6B7280] transition-colors hover:bg-[#F8F9FA] dark:text-[#A1A1AA] dark:hover:bg-[#2A2A2A]"
                 aria-label="Notifications"
               >
                 <Bell strokeWidth={1.75} className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
@@ -140,9 +188,9 @@ export function Topbar({ title }: { title?: string }) {
                   >
                     <div className="flex items-center justify-between border-b border-[rgba(0,0,0,0.06)] p-4 dark:border-[rgba(255,255,255,0.06)]">
                       <div>
-                        <h3 className="text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA]">Notifications</h3>
+                        <h3 className="text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA]">{t("notifications")}</h3>
                         <p className="mt-0.5 text-[11px] text-[#9CA3AF] dark:text-[#A1A1AA]">
-                          {unreadCount > 0 ? `${unreadCount} unread` : "No unread notifications"}
+                          {unreadCount > 0 ? `${unreadCount} ${copy.unread}` : t("noUnread")}
                         </p>
                       </div>
                       <button
@@ -151,7 +199,7 @@ export function Topbar({ title }: { title?: string }) {
                         disabled={unreadCount === 0}
                         className="text-[11px] font-medium text-[#C5A059] transition hover:text-[#E55A25] disabled:cursor-not-allowed disabled:text-[#C8A38D]"
                       >
-                        Mark all as read
+                        {t("markAllAsRead")}
                       </button>
                     </div>
 
@@ -184,7 +232,7 @@ export function Topbar({ title }: { title?: string }) {
                                   {notification.message}
                                 </p>
                                 <p className="mt-1.5 text-[10px] text-[#9CA3AF] dark:text-[#A1A1AA]">
-                                  {formatRelativeTime(notification.createdAt)}
+                                  {formatRelativeTime(notification.createdAt, copy)}
                                 </p>
                               </div>
                             </div>
@@ -196,9 +244,9 @@ export function Topbar({ title }: { title?: string }) {
                             <BellOff strokeWidth={1.75} className="h-5 w-5 opacity-70" />
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA]">All caught up</p>
+                            <p className="text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA]">{t("allCaughtUp")}</p>
                             <p className="mt-1 text-xs leading-5 text-[#9CA3AF] dark:text-[#A1A1AA]">
-                              New document, agent, and workspace updates will appear here.
+                              {t("newUpdates")}
                             </p>
                           </div>
                         </div>
@@ -211,10 +259,10 @@ export function Topbar({ title }: { title?: string }) {
 
             <button
               onClick={() => logout()}
-              className="group ml-2 inline-flex items-center gap-2 rounded-full border border-[rgba(0,0,0,0.12)] bg-white px-4 py-2 text-xs font-medium text-[#4B5563] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:text-[#18181B] dark:border-[rgba(255,255,255,0.12)] dark:bg-[#18181A] dark:text-[#A1A1AA] dark:hover:bg-[#202022] dark:hover:text-[#F8F9FA]"
+              className="group ml-2 inline-flex min-h-[42px] items-center gap-2 rounded-full border border-[rgba(0,0,0,0.12)] bg-white px-5 py-2 text-xs font-medium text-[#6B7280] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:text-[#18181B] dark:border-[rgba(255,255,255,0.12)] dark:bg-[#18181A] dark:text-[#A1A1AA] dark:hover:bg-[#202022] dark:hover:text-[#F8F9FA]"
             >
               <LogOut strokeWidth={1.75} className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-              Sign out
+              {t("signOut")}
             </button>
           </div>
         </div>
@@ -223,15 +271,15 @@ export function Topbar({ title }: { title?: string }) {
   )
 }
 
-function formatRelativeTime(value: string) {
+function formatRelativeTime(value: string, copy: (typeof TOPBAR_LABELS)[Language]) {
   const time = new Date(value).getTime()
-  if (Number.isNaN(time)) return "recently"
+  if (Number.isNaN(time)) return copy.recently
   const diff = Math.max(0, Date.now() - time)
   const minutes = Math.floor(diff / 60000)
-  if (minutes < 1) return "now"
-  if (minutes < 60) return `${minutes}m ago`
+  if (minutes < 1) return copy.now
+  if (minutes < 60) return `${minutes}${copy.minutesAgo}`
   const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
-  return `${Math.floor(hours / 24)}d ago`
+  if (hours < 24) return `${hours}${copy.hoursAgo}`
+  return `${Math.floor(hours / 24)}${copy.daysAgo}`
 }
 

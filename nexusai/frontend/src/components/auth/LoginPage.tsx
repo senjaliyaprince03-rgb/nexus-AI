@@ -245,10 +245,9 @@ export function LoginPage() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4, type: "spring", stiffness: 300, damping: 20 }}
-            className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-[#F8F9FA]/20 shadow-[0_8px_32px_rgba(0,0,0,0.2)] flex items-center justify-center mb-8 text-white relative overflow-hidden group"
+            className="mb-8 relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <LogoMark className="w-6 h-6 relative z-10 drop-shadow-md rounded-md shadow-none" />
+            <LogoMark className="w-12 h-12 rounded-2xl drop-shadow-md relative z-10" />
           </motion.div>
 
           {/* Tagline with elegant crossfade */}
@@ -315,9 +314,7 @@ export function LoginPage() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="flex items-center gap-3 mb-4 pl-1"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#FF8F5E] shadow-[0_8px_16px_rgba(212,175,55,0.25)] flex items-center justify-center text-white">
-              <LogoMark className="w-5 h-5 rounded-md shadow-none" />
-            </div>
+            <LogoMark className="w-10 h-10 rounded-xl" />
             <span className="font-display font-bold text-[#18181B] tracking-tight text-2xl">
               NexusAI
             </span>

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart2, Building2, CreditCard, Files, LayoutDashboard, Layers, LifeBuoy, Menu, MessageSquare, UserCircle, X, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n"
+import type { Language } from "@/locales/translations"
 
 const NAV = [
   { href: "/dashboard",           icon: LayoutDashboard, label: "Home" },
@@ -13,17 +15,54 @@ const NAV = [
 ];
 
 const MORE_NAV = [
-  { href: "/dashboard/workspace", icon: Building2, label: "Workspace" },
-  { href: "/dashboard/analytics", icon: BarChart2, label: "Analytics" },
-  { href: "/dashboard/agents",    icon: Zap,       label: "Agents" },
-  { href: "/dashboard/modules",   icon: Layers,    label: "Modules" },
-  { href: "/dashboard/profile",   icon: UserCircle, label: "Profile" },
-  { href: "/dashboard/billing",   icon: CreditCard, label: "Billing" },
+  { href: "/dashboard/workspace", icon: Building2, labelKey: "workspace" },
+  { href: "/dashboard/analytics", icon: BarChart2, labelKey: "analytics" },
+  { href: "/dashboard/agents",    icon: Zap,       labelKey: "agents" },
+  { href: "/dashboard/modules",   icon: Layers,    labelKey: "modules" },
+  { href: "/dashboard/profile",   icon: UserCircle, labelKey: "profile" },
+  { href: "/dashboard/billing",   icon: CreditCard, labelKey: "billing" },
 ];
+
+const MOBILE_LABELS: Record<Language, Record<string, string>> = {
+  en: {
+    home: "Home",
+    chat: "Chat",
+    docs: "Docs",
+    help: "Help",
+    more: "More",
+    moreTools: "More tools",
+  },
+  es: {
+    home: "Inicio",
+    chat: "Chat",
+    docs: "Documentos",
+    help: "Ayuda",
+    more: "Mas",
+    moreTools: "Mas herramientas",
+  },
+  fr: {
+    home: "Accueil",
+    chat: "Chat",
+    docs: "Docs",
+    help: "Aide",
+    more: "Plus",
+    moreTools: "Plus d'outils",
+  },
+  de: {
+    home: "Startseite",
+    chat: "Chat",
+    docs: "Dokumente",
+    help: "Hilfe",
+    more: "Mehr",
+    moreTools: "Weitere Tools",
+  },
+}
 
 export function MobileNav() {
   const pathname = usePathname() ?? "";
   const [open, setOpen] = useState(false);
+  const { language } = useI18n()
+  const labels = MOBILE_LABELS[language] || MOBILE_LABELS.en
 
   return (
     <>
@@ -34,7 +73,7 @@ export function MobileNav() {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-2 flex items-center justify-between px-2 py-1">
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#9CA3AF]">More tools</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#9CA3AF]">{labels.moreTools}</p>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -45,7 +84,7 @@ export function MobileNav() {
               </button>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {MORE_NAV.map(({ href, icon: Icon, label }) => (
+              {MORE_NAV.map(({ href, icon: Icon, labelKey }) => (
                 <Link
                   key={href}
                   href={href}
@@ -53,7 +92,7 @@ export function MobileNav() {
                   className="flex items-center gap-3 rounded-sm border border-black/5 bg-[#F8F9FA] px-3 py-3 text-sm font-semibold text-[#18181B]"
                 >
                   <Icon className="h-4 w-4 text-[#C5A059]" />
-                  {label}
+                  {labels[labelKey]}
                 </Link>
               ))}
             </div>
@@ -73,7 +112,7 @@ export function MobileNav() {
               )}
             >
               <Icon className="h-5 w-5" />
-              {label}
+              {labels[label.toLowerCase()]}
             </Link>
           );
         })}
@@ -88,7 +127,7 @@ export function MobileNav() {
           aria-label="Open more navigation"
         >
           <Menu className="h-5 w-5" />
-          More
+          {labels.more}
         </button>
       </nav>
     </>

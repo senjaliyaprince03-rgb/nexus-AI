@@ -213,6 +213,17 @@ img, picture, video, canvas, svg {
   color: #111827;
 }
 
+.dashboard-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+}
+
+.dashboard-select::-ms-expand {
+  display: none;
+}
+
 .dashboard-chip {
   border: 1px solid #E5E7EB;
   background: #FFFFFF;
@@ -1133,4 +1144,313 @@ section.wm > .vanta-canvas {
   --landing-text-muted: #a1b2c3;
   --landing-border: rgba(255, 255, 255, 0.10);
   --landing-border-soft: rgba(255, 255, 255, 0.06);
+}
+
+/* Custom Themes */
+/* Olivia Rodrigo Theme */
+.olivia-rodrigo,
+.theme-olivia {
+  --bg-primary: #fdfaeb;
+  --bg-secondary: #f3e8ff;
+  --bg-card: #ffffff;
+  --text-primary: #4c1d95;
+  --text-secondary: #7c3aed;
+  --text-muted: #a78bfa;
+  --accent-coral: #d946ef;
+  --accent-green: #10b981;
+  --accent-blue: #8b5cf6;
+  --landing-bg: #fdfaeb;
+  --landing-bg-muted: #f3e8ff;
+}
+
+/* Backrooms Theme */
+.backrooms,
+.theme-backrooms {
+  --bg-primary: #fef08a;
+  --bg-secondary: #fde047;
+  --bg-card: #fef9c3;
+  --text-primary: #713f12;
+  --text-secondary: #854d0e;
+  --text-muted: #ca8a04;
+  --accent-coral: #ea580c;
+  --accent-green: #65a30d;
+  --accent-blue: #0284c7;
+  --landing-bg: #fef08a;
+  --landing-bg-muted: #fde047;
+}
+
+/* Happy Graduation Theme */
+.happy-graduation,
+.theme-graduation {
+  --bg-primary: #eff6ff;
+  --bg-secondary: #dbeafe;
+  --bg-card: #ffffff;
+  --text-primary: #1e3a8a;
+  --text-secondary: #1d4ed8;
+  --text-muted: #60a5fa;
+  --accent-coral: #fbbf24;
+  --accent-green: #34d399;
+  --accent-blue: #3b82f6;
+  --landing-bg: #eff6ff;
+  --landing-bg-muted: #dbeafe;
+}
+
+/* Deli Boys Theme */
+.deli-boys,
+.theme-deli {
+  --bg-primary: #fef2f2;
+  --bg-secondary: #fee2e2;
+  --bg-card: #ffffff;
+  --text-primary: #7f1d1d;
+  --text-secondary: #b91c1c;
+  --text-muted: #f87171;
+  --accent-coral: #ef4444;
+  --accent-green: #10b981;
+  --accent-blue: #3b82f6;
+  --landing-bg: #fef2f2;
+  --landing-bg-muted: #fee2e2;
+}
+
+/* Maluma Theme */
+.maluma,
+.theme-maluma {
+  --bg-primary: #f0fdfa;
+  --bg-secondary: #ccfbf1;
+  --bg-card: #ffffff;
+  --text-primary: #115e59;
+  --text-secondary: #0f766e;
+  --text-muted: #2dd4bf;
+  --accent-coral: #ec4899;
+  --accent-green: #14b8a6;
+  --accent-blue: #06b6d4;
+  --landing-bg: #f0fdfa;
+  --landing-bg-muted: #ccfbf1;
+}
+
+/* The Mandalorian & Grogu Theme */
+.mandalorian-grogu,
+.theme-mandalorian {
+  --bg-primary: #e5e7eb;
+  --bg-secondary: #d1d5db;
+  --bg-card: #f3f4f6;
+  --text-primary: #1f2937;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --accent-coral: #f59e0b;
+  --accent-green: #22c55e;
+  --accent-blue: #64748b;
+  --landing-bg: #e5e7eb;
+  --landing-bg-muted: #d1d5db;
+}
+
+/* Mother's Day Theme */
+.mot,
+.theme-mothersday {
+  --bg-primary: #171717;
+  --bg-secondary: #262626;
+  --bg-card: #1f1f1f;
+  --text-primary: #f5f5f5;
+  --text-secondary: #d4d4d4;
+  --text-muted: #a3a3a3;
+  --accent-coral: #dc2626;
+  --accent-green: #16a34a;
+  --accent-blue: #2563eb;
+  --landing-bg: #171717;
+  --landing-bg-muted: #262626;
+}
+
+.theme-prada {
+  --bg-primary: #fdf2f8;
+  --bg-secondary: #fce7f3;
+  --bg-card: #ffffff;
+  --text-primary: #831843;
+  --text-secondary: #9d174d;
+  --text-muted: #ec4899;
+  --accent-coral: #111827;
+  --accent-green: #d4af37;
+  --accent-blue: #be185d;
+  --landing-bg: #fdf2f8;
+  --landing-bg-muted: #fce7f3;
+}
+
+.theme-pixel {
+  --bg-primary: #ecfeff;
+  --bg-secondary: #cffafe;
+  --bg-card: #ffffff;
+  --text-primary: #164e63;
+  --text-secondary: #0f766e;
+  --text-muted: #06b6d4;
+  --accent-coral: #f97316;
+  --accent-green: #14b8a6;
+  --accent-blue: #6366f1;
+  --landing-bg: #ecfeff;
+  --landing-bg-muted: #cffafe;
+}
+
+.theme-coachella {
+  --bg-primary: #fff7ed;
+  --bg-secondary: #ffedd5;
+  --bg-card: #ffffff;
+  --text-primary: #7c2d12;
+  --text-secondary: #c2410c;
+  --text-muted: #fb923c;
+  --accent-coral: #f97316;
+  --accent-green: #14b8a6;
+  --accent-blue: #8b5cf6;
+  --landing-bg: #fff7ed;
+  --landing-bg-muted: #ffedd5;
+}
+
+.theme-cats {
+  --bg-primary: #fffaf0;
+  --bg-secondary: #fef3c7;
+  --bg-card: #ffffff;
+  --text-primary: #78350f;
+  --text-secondary: #92400e;
+  --text-muted: #d97706;
+  --accent-coral: #f59e0b;
+  --accent-green: #84cc16;
+  --accent-blue: #60a5fa;
+  --landing-bg: #fffaf0;
+  --landing-bg-muted: #fef3c7;
+}
+
+.theme-dogs {
+  --bg-primary: #f0fdf4;
+  --bg-secondary: #dcfce7;
+  --bg-card: #ffffff;
+  --text-primary: #14532d;
+  --text-secondary: #166534;
+  --text-muted: #22c55e;
+  --accent-coral: #f97316;
+  --accent-green: #16a34a;
+  --accent-blue: #60a5fa;
+  --landing-bg: #f0fdf4;
+  --landing-bg-muted: #dcfce7;
+}
+
+.theme-bts {
+  --bg-primary: #faf5ff;
+  --bg-secondary: #f3e8ff;
+  --bg-card: #ffffff;
+  --text-primary: #581c87;
+  --text-secondary: #7e22ce;
+  --text-muted: #a855f7;
+  --accent-coral: #ec4899;
+  --accent-green: #22c55e;
+  --accent-blue: #8b5cf6;
+  --landing-bg: #faf5ff;
+  --landing-bg-muted: #f3e8ff;
+}
+
+.theme-skygarden {
+  --bg-primary: #eff6ff;
+  --bg-secondary: #dbeafe;
+  --bg-card: #ffffff;
+  --text-primary: #1d4ed8;
+  --text-secondary: #2563eb;
+  --text-muted: #60a5fa;
+  --accent-coral: #22c55e;
+  --accent-green: #10b981;
+  --accent-blue: #0ea5e9;
+  --landing-bg: #eff6ff;
+  --landing-bg-muted: #dbeafe;
+}
+
+.theme-basketball {
+  --bg-primary: #fff7ed;
+  --bg-secondary: #ffedd5;
+  --bg-card: #ffffff;
+  --text-primary: #7c2d12;
+  --text-secondary: #c2410c;
+  --text-muted: #fb923c;
+  --accent-coral: #ea580c;
+  --accent-green: #16a34a;
+  --accent-blue: #1d4ed8;
+  --landing-bg: #fff7ed;
+  --landing-bg-muted: #ffedd5;
+}
+
+.theme-blackpink {
+  --bg-primary: #fdf2f8;
+  --bg-secondary: #fce7f3;
+  --bg-card: #ffffff;
+  --text-primary: #831843;
+  --text-secondary: #db2777;
+  --text-muted: #f472b6;
+  --accent-coral: #111827;
+  --accent-green: #ec4899;
+  --accent-blue: #f472b6;
+  --landing-bg: #fdf2f8;
+  --landing-bg-muted: #fce7f3;
+}
+
+.theme-megan {
+  --bg-primary: #fefce8;
+  --bg-secondary: #fef3c7;
+  --bg-card: #ffffff;
+  --text-primary: #78350f;
+  --text-secondary: #a16207;
+  --text-muted: #d97706;
+  --accent-coral: #f59e0b;
+  --accent-green: #65a30d;
+  --accent-blue: #60a5fa;
+  --landing-bg: #fefce8;
+  --landing-bg-muted: #fef3c7;
+}
+
+.theme-horse {
+  --bg-primary: #fef2f2;
+  --bg-secondary: #fee2e2;
+  --bg-card: #ffffff;
+  --text-primary: #7f1d1d;
+  --text-secondary: #b91c1c;
+  --text-muted: #ef4444;
+  --accent-coral: #f59e0b;
+  --accent-green: #16a34a;
+  --accent-blue: #2563eb;
+  --landing-bg: #fef2f2;
+  --landing-bg-muted: #fee2e2;
+}
+
+.theme-valentines {
+  --bg-primary: #fff1f2;
+  --bg-secondary: #ffe4e6;
+  --bg-card: #ffffff;
+  --text-primary: #9f1239;
+  --text-secondary: #e11d48;
+  --text-muted: #fb7185;
+  --accent-coral: #f43f5e;
+  --accent-green: #fb7185;
+  --accent-blue: #f472b6;
+  --landing-bg: #fff1f2;
+  --landing-bg-muted: #ffe4e6;
+}
+
+.theme-simpsons {
+  --bg-primary: #fef9c3;
+  --bg-secondary: #fde047;
+  --bg-card: #ffffff;
+  --text-primary: #1d4ed8;
+  --text-secondary: #2563eb;
+  --text-muted: #f59e0b;
+  --accent-coral: #facc15;
+  --accent-green: #22c55e;
+  --accent-blue: #3b82f6;
+  --landing-bg: #fef9c3;
+  --landing-bg-muted: #fde047;
+}
+
+.theme-football {
+  --bg-primary: #f0fdf4;
+  --bg-secondary: #dcfce7;
+  --bg-card: #ffffff;
+  --text-primary: #14532d;
+  --text-secondary: #15803d;
+  --text-muted: #22c55e;
+  --accent-coral: #16a34a;
+  --accent-green: #15803d;
+  --accent-blue: #eab308;
+  --landing-bg: #f0fdf4;
+  --landing-bg-muted: #dcfce7;
 }

@@ -175,6 +175,22 @@ export const useAuthStore = create<AuthState>()(
         fetchUserPromise = (async () => {
           set({ isLoading: true })
           try {
+            const hasRefreshToken = Boolean(getSafeSessionStorage().getItem("nexusai_refresh"))
+            if (hasRefreshToken) {
+              const refreshRes = await fetch("/api/auth/refresh", { method: "POST", credentials: "include" })
+              if (refreshRes.ok) {
+                const tokens = await refreshRes.json() as {
+                  ok?: boolean
+                  access_token?: string
+                  refresh_token?: string
+                }
+                if (tokens.ok !== false) {
+                  if (tokens.access_token) setToken(tokens.access_token)
+                  if (tokens.refresh_token) getSafeSessionStorage().setItem("nexusai_refresh", tokens.refresh_token)
+                }
+              }
+            }
+
             const session = await api.get<CurrentUserResponse>("/api/auth/me")
             set({ user: session.user, workspace: session.workspace, isAuthenticated: true, sessionChecked: true })
           } catch (initialError) {

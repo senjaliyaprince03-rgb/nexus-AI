@@ -46,6 +46,23 @@ interface ChatState {
   reset: () => void
 }
 
+function syncSessionMessages(
+  sessions: ChatSession[],
+  activeSessionId: string | null,
+  messages: ChatMessage[],
+): ChatSession[] {
+  if (!activeSessionId) return sessions
+  return sessions.map((session) =>
+    session.id === activeSessionId
+      ? {
+          ...session,
+          messages,
+          updated_at: new Date().toISOString(),
+        }
+      : session,
+  )
+}
+
 // ── Store ─────────────────────────────────────────────────────────────────────
 
 export const useChatStore = create<ChatState>()(
@@ -63,10 +80,28 @@ export const useChatStore = create<ChatState>()(
       setSessions: (sessions) => set({ sessions }),
 
       addSession: (session) =>
-        set((s) => ({ sessions: [session, ...s.sessions] })),
+        set((s) => {
+          const existingIndex = s.sessions.findIndex((item) => item.id === session.id)
+          const nextSession = {
+            ...session,
+            messages: session.messages ?? s.messages,
+          }
+          if (existingIndex === -1) {
+            return { sessions: [nextSession, ...s.sessions] }
+          }
+          const sessions = [...s.sessions]
+          sessions.splice(existingIndex, 1)
+          return { sessions: [nextSession, ...sessions] }
+        }),
 
       setActiveSession: (sessionId) =>
-        set({ activeSessionId: sessionId, messages: [] }),
+        set((s) => {
+          const activeSession = s.sessions.find((session) => session.id === sessionId)
+          return {
+            activeSessionId: sessionId,
+            messages: activeSession?.messages ?? [],
+          }
+        }),
 
       updateSessionTitle: (sessionId, title) =>
         set((s) => ({
@@ -92,7 +127,13 @@ export const useChatStore = create<ChatState>()(
       setMessages: (messages) => set({ messages }),
 
       addMessage: (msg) =>
-        set((s) => ({ messages: [...s.messages, msg] })),
+        set((s) => {
+          const messages = [...s.messages, msg]
+          return {
+            messages,
+            sessions: syncSessionMessages(s.sessions, s.activeSessionId, messages),
+          }
+        }),
 
       // ── Streaming ──────────────────────────────────────────────────────────
 
@@ -111,49 +152,66 @@ export const useChatStore = create<ChatState>()(
           isStreaming: true,
           streamingMessageId: assistantMessageId,
           messages: [...s.messages, placeholder],
+          sessions: syncSessionMessages(s.sessions, s.activeSessionId, [...s.messages, placeholder]),
         }))
       },
 
       appendToken: (token) =>
-        set((s) => ({
-          messages: s.messages.map((m) =>
+        set((s) => {
+          const messages = s.messages.map((m) =>
             m.id === s.streamingMessageId
               ? { ...m, content: m.content + token }
               : m,
-          ),
-        })),
+          )
+          return {
+            messages,
+            sessions: syncSessionMessages(s.sessions, s.activeSessionId, messages),
+          }
+        }),
 
       addSource: (source) =>
-        set((s) => ({
-          messages: s.messages.map((m) =>
+        set((s) => {
+          const messages = s.messages.map((m) =>
             m.id === s.streamingMessageId
               ? { ...m, sources: [...(m.sources ?? []), source] }
               : m,
-          ),
-        })),
+          )
+          return {
+            messages,
+            sessions: syncSessionMessages(s.sessions, s.activeSessionId, messages),
+          }
+        }),
 
       finalizeStream: (sessionId, confidence) =>
-        set((s) => ({
-          isStreaming: false,
-          streamingMessageId: null,
-          activeSessionId: sessionId,
-          messages: s.messages.map((m) =>
+        set((s) => {
+          const messages = s.messages.map((m) =>
             m.id === s.streamingMessageId
               ? { ...m, isStreaming: false, confidence_score: confidence }
               : m,
-          ),
-        })),
+          )
+          return {
+            isStreaming: false,
+            streamingMessageId: null,
+            activeSessionId: sessionId,
+            messages,
+            sessions: syncSessionMessages(s.sessions, sessionId, messages),
+          }
+        }),
 
       failStream: (errorText) =>
-        set((s) => ({
-          isStreaming: false,
-          streamingMessageId: null,
-          messages: s.messages.map((m) =>
+        set((s) => {
+          const messages = s.messages.map((m) =>
             m.id === s.streamingMessageId
               ? { ...m, isStreaming: false, content: `⚠️ ${errorText}` }
               : m,
-          ),
-        })),
+          )
+          return {
+            isStreaming: false,
+            streamingMessageId: null,
+            messages,
+            sessions: syncSessionMessages(s.sessions, s.activeSessionId, messages),
+          }
+        }),
 
       reset: () =>
         set({

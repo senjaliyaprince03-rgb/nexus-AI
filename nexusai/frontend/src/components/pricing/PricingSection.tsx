@@ -11,6 +11,8 @@ import {
   Star,
   ArrowRight,
   IndianRupee,
+  Building2,
+  Sparkles,
 } from "lucide-react"
 
 /* ── Pricing Data ─────────────────────────────────────────────────────────── */
@@ -19,19 +21,21 @@ const PLANS = [
   {
     id: "starter",
     name: "Starter",
-    badge: null,
-    description: "Perfect for individuals exploring AI-powered document search.",
+    badge: "CURRENT PLAN",
+    description: "Perfect for getting started with AI",
     monthlyPrice: 0,
     yearlyPrice: 0,
     currency: "₹",
-    icon: Zap,
-    iconBg: "bg-[var(--landing-surface-muted)] border border-[var(--landing-border)]",
-    iconColor: "text-[#7CB69E]",
-    cta: "Start Free",
+    icon: Sparkles,
+    iconBg: "bg-[rgba(212,175,55,0.08)] border border-[rgba(212,175,55,0.2)]",
+    iconColor: "text-[#D4AF37]",
+    cta: "✓ Active Plan",
     ctaVariant: "secondary" as const,
     popular: false,
+    current: true,
+    credits: 20,
     features: [
-      "5 document uploads",
+      "2 document uploads",
       "50 AI queries / month",
       "Basic RAG pipeline",
       "Community support",
@@ -43,24 +47,25 @@ const PLANS = [
     id: "pro",
     name: "Pro",
     badge: "Most Popular",
-    description:
-      "For professionals & teams who need serious document intelligence.",
+    description: "Ideal for power users & creators",
     monthlyPrice: 1999,
-    yearlyPrice: 19190,
+    yearlyPrice: 0,
     currency: "₹",
     icon: Crown,
-    iconBg: "bg-[var(--landing-surface-muted)] border border-[var(--landing-border)]",
-    iconColor: "text-[#C5A059]",
-    cta: "Get Pro",
+    iconBg: "bg-[rgba(212,175,55,0.08)] border border-[rgba(212,175,55,0.2)]",
+    iconColor: "text-[#D4AF37]",
+    cta: "Upgrade to Pro",
     ctaVariant: "primary" as const,
     popular: true,
+    current: false,
+    credits: 100,
     features: [
-      "Unlimited uploads",
-      "Unlimited AI queries",
+      "1,000 document uploads",
+      "100,000 AI queries",
       "Multi-agent RAG pipeline",
       "Priority email & chat support",
       "5 workspaces",
-      "Unlimited chat history",
+      "1-year chat history",
       "Advanced analytics dashboard",
       "Custom AI instructions",
       "API access (10K req/mo)",
@@ -70,24 +75,26 @@ const PLANS = [
     id: "enterprise",
     name: "Enterprise",
     badge: null,
-    description:
-      "For organisations needing dedicated infrastructure & compliance.",
+    description: "For teams requiring maximum power",
     monthlyPrice: 4999,
-    yearlyPrice: 47990,
+    yearlyPrice: 0,
     currency: "₹",
-    icon: Shield,
-    iconBg: "bg-[var(--landing-surface-muted)] border border-[var(--landing-border)]",
-    iconColor: "text-[#3B6FE8]",
-    cta: "Contact Us",
+    icon: Building2,
+    iconBg: "bg-[rgba(212,175,55,0.08)] border border-[rgba(212,175,55,0.2)]",
+    iconColor: "text-[#D4AF37]",
+    cta: "Get Enterprise",
     ctaVariant: "secondary" as const,
     popular: false,
+    current: false,
+    credits: 1200,
     features: [
       "Everything in Pro",
-      "Unlimited workspaces",
+      "50 workspaces",
       "SSO / SAML integration",
       "Dedicated account manager",
       "Custom data residency (India)",
       "99.9% SLA uptime guarantee",
+      "Forever chat history",
       "On-prem deployment option",
       "SOC 2 & ISO 27001 compliance",
       "Invoice & PO billing with GST",
@@ -156,14 +163,14 @@ function BillingToggle({
     <div className="flex items-center justify-center gap-4 mt-8 mb-16">
       <span
         className={`text-sm font-medium transition-colors duration-200 ${
-          !isYearly ? "text-[var(--landing-text)]" : "text-[var(--landing-text-muted)]"
+          !isYearly ? "text-gray-900" : "text-gray-400"
         }`}
       >
         Monthly
       </span>
       <button
         onClick={onToggle}
-        className="relative w-16 h-8 rounded-full bg-[var(--landing-surface-strong)] border border-[var(--landing-border)]
+        className="relative w-14 h-7 rounded-full bg-gray-200 border border-gray-300
                    transition-colors duration-300 focus:outline-none focus-visible:ring-2
                    focus-visible:ring-[#C5A059]"
         aria-label="Toggle billing period"
@@ -171,16 +178,16 @@ function BillingToggle({
         <motion.div
           layout
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className={`absolute top-1 w-6 h-6 rounded-full shadow-md ${
+          className={`absolute top-[2px] w-5 h-5 rounded-full shadow-sm ${
             isYearly
-              ? "left-[calc(100%-28px)] bg-[#C5A059]"
-              : "left-1 bg-[var(--landing-surface)] border border-[var(--landing-border)]"
+              ? "left-[calc(100%-22px)] bg-white"
+              : "left-[2px] bg-white border border-gray-200"
           }`}
         />
       </button>
       <span
         className={`text-sm font-medium transition-colors duration-200 ${
-          isYearly ? "text-[var(--landing-text)]" : "text-[var(--landing-text-muted)]"
+          isYearly ? "text-gray-900" : "text-gray-400"
         }`}
       >
         Yearly
@@ -192,8 +199,8 @@ function BillingToggle({
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.8, x: -8 }}
             className="inline-flex items-center gap-1 px-3 py-1 rounded-full
-                       bg-[var(--landing-surface-strong)] text-[#C5A059] text-xs font-semibold
-                       border border-[rgba(255,107,53,0.2)]"
+                       bg-white text-[#C5A059] text-xs font-semibold
+                       border border-[#F0E6D2] shadow-sm"
           >
             <BadgePercent className="w-3 h-3" />
             Save 20%
@@ -245,7 +252,7 @@ function PricingCard({
       }
     >
       {/* Popular badge */}
-      {plan.badge && (
+      {plan.badge && plan.popular && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -254,8 +261,8 @@ function PricingCard({
         >
           <div
             className="flex items-center gap-1.5 px-4 py-1.5 rounded-full
-                        bg-[#C5A059] text-white text-xs font-semibold
-                        shadow-[0_4px_16px_rgba(255,107,53,0.4)]"
+                        bg-[#D4AF37] text-white text-xs font-semibold
+                        shadow-md border border-[#C5A059]"
           >
             <Star className="w-3.5 h-3.5 fill-current" />
             {plan.badge}
@@ -266,69 +273,84 @@ function PricingCard({
       {/* Card inner */}
       <div
         className={`
-          premium-glow-soft flex flex-col flex-1 rounded-[23px] p-8 lg:p-10
+          flex flex-col flex-1 rounded-[23px] p-8 lg:p-10
           ${
             plan.popular
-              ? "bg-[var(--landing-surface)] border-2 border-[#C5A059] shadow-[0_20px_60px_rgba(255,107,53,0.12)]"
-              : "bg-[var(--landing-surface)] border border-[var(--landing-border)] shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
+              ? "bg-white border-[1.5px] border-[#D4AF37] shadow-[0_20px_60px_rgba(212,175,55,0.08)]"
+              : "bg-white border border-gray-200 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)]"
           }
           transition-shadow duration-500
         `}
       >
         {/* Icon + Name */}
-        <div className="flex items-center gap-3 mb-3">
-          <div
-            className={`w-11 h-11 rounded-xl ${plan.iconBg} ${plan.iconColor} flex items-center justify-center`}
-          >
-            <Icon className="w-5 h-5" />
+        <div className="flex flex-col mb-4">
+          <div className="flex items-center gap-3">
+            <div
+              className={`w-11 h-11 rounded-xl ${plan.iconBg} ${plan.iconColor} flex items-center justify-center`}
+            >
+              <Icon className="w-5 h-5" />
+            </div>
+            <div className="flex flex-col">
+              <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
+              {plan.current && (
+                <span className="text-[10px] font-bold text-[#D4AF37] tracking-widest uppercase mt-0.5">
+                  CURRENT PLAN
+                </span>
+              )}
+            </div>
           </div>
-          <h3 className="text-xl font-semibold text-[var(--landing-text)]">{plan.name}</h3>
         </div>
 
         {/* Description */}
-        <p className="text-sm text-[var(--landing-text-muted)] leading-relaxed mb-6 min-h-[40px]">
+        <p className="text-sm text-gray-500 leading-relaxed mb-6 min-h-[40px]">
           {plan.description}
         </p>
 
         {/* Price */}
         <div className="mb-8">
           <div className="flex items-baseline gap-1">
-            <span className="text-4xl lg:text-5xl font-bold text-[var(--landing-text)] tracking-tight">
+            <span className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
               <AnimatedPrice
                 value={isYearly ? perMonth : price}
                 currency={plan.currency}
               />
             </span>
             {plan.monthlyPrice > 0 && (
-              <span className="text-sm text-[var(--landing-text-muted)] ml-1">/month</span>
+              <span className="text-sm text-gray-400 ml-1">/month</span>
             )}
           </div>
           {isYearly && plan.yearlyPrice > 0 && (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-xs text-[var(--landing-text-muted)] mt-1.5"
+              className="text-xs text-gray-400 mt-1.5"
             >
               Billed ₹{formatINR(plan.yearlyPrice)}/year · Save ₹
               {formatINR(plan.monthlyPrice * 12 - plan.yearlyPrice)}
             </motion.p>
           )}
           {plan.monthlyPrice === 0 && (
-            <p className="text-xs text-[#7CB69E] font-medium mt-1.5">
-              Free forever — no credit card required
+            <p className="text-[11px] text-[#D4AF37] font-medium mt-1.5">
+              Free forever · no credit card required
             </p>
           )}
         </div>
 
         {/* CTA */}
-        <div className="mb-8">
-          {plan.popular ? (
+        <div className="mb-4">
+          {plan.current ? (
             <button
-              className="w-full h-12 rounded-2xl text-white font-semibold text-sm
-                         bg-gradient-to-r from-[#C5A059] to-[#FF8F5E]
-                         shadow-[0_4px_20px_rgba(255,107,53,0.35)]
-                         hover:shadow-[0_8px_30px_rgba(255,107,53,0.45)]
-                         hover:scale-[1.02] active:scale-[0.98]
+              className="w-full h-11 rounded-xl text-white font-semibold text-sm
+                         bg-[#18181B] hover:bg-gray-800
+                         transition-all duration-200
+                         flex items-center justify-center gap-2"
+            >
+              {plan.cta}
+            </button>
+          ) : plan.popular ? (
+            <button
+              className="w-full h-11 rounded-xl text-white font-semibold text-sm
+                         bg-[#C5A059] hover:bg-[#B38D45] shadow-sm hover:shadow-md
                          transition-all duration-200
                          flex items-center justify-center gap-2"
             >
@@ -336,18 +358,31 @@ function PricingCard({
               <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
-            <Button
-              variant={plan.ctaVariant}
-              className="w-full h-12 rounded-2xl text-sm"
+            <button
+              className="w-full h-11 rounded-xl text-gray-900 font-medium text-sm
+                         bg-white border border-gray-200 hover:bg-gray-50
+                         transition-all duration-200
+                         flex items-center justify-center gap-2"
             >
               {plan.cta}
               <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
+            </button>
           )}
         </div>
 
+        {/* Trial & Credits Box */}
+        <div className="flex flex-col items-center mb-8 gap-3 mt-1">
+          <p className="text-[11px] font-medium text-gray-400">
+            Start Free 7 Day Trial
+          </p>
+          <div className="w-full rounded-xl border border-[#F0E6D2] bg-[#FDF9F0] p-2.5 flex items-center justify-center gap-2">
+            <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+            <span className="text-xs font-semibold text-gray-900">{plan.credits} NexusAI Credits</span>
+          </div>
+        </div>
+
         {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.08)] to-transparent mb-6" />
+        <div className="h-px bg-gray-100 mb-6" />
 
         {/* Features */}
         <ul className="flex flex-col gap-3.5 flex-1">
@@ -358,16 +393,12 @@ function PricingCard({
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 + i * 0.04 }}
-              className="flex items-start gap-3 text-sm text-[var(--landing-text-secondary)]"
+              className="flex items-start gap-3 text-sm text-gray-500"
             >
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                  plan.popular
-                    ? "bg-[var(--landing-surface-strong)] text-[#C5A059]"
-                    : "bg-[var(--landing-surface-muted)] text-[#7CB69E]"
-                }`}
+                className={`w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5 text-[#D4AF37]`}
               >
-                <Check className="w-3 h-3" strokeWidth={3} />
+                <Check className="w-4 h-4" strokeWidth={2.5} />
               </div>
               {feature}
             </motion.li>
@@ -415,13 +446,13 @@ export function PricingSection() {
   const [isYearly, setIsYearly] = useState(false)
 
   return (
-    <section id="pricing" className="relative overflow-hidden bg-[var(--landing-bg)] px-6 sm:px-8 lg:px-12 py-24 lg:py-32">
+    <section id="pricing" className="relative overflow-hidden bg-[#FAFAFA] px-6 sm:px-8 lg:px-12 py-24 lg:py-32">
       {/* Decorative background blobs */}
       <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full
-                      bg-[radial-gradient(circle,rgba(255,107,53,0.04),transparent_70%)]
+                      bg-[radial-gradient(circle,rgba(212,175,55,0.05),transparent_70%)]
                       pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full
-                      bg-[radial-gradient(circle,rgba(59,111,232,0.03),transparent_70%)]
+                      bg-[radial-gradient(circle,rgba(212,175,55,0.03),transparent_70%)]
                       pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">

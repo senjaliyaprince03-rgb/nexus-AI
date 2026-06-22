@@ -1,11 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { motion, useReducedMotion } from "framer-motion"
+import { motion } from "framer-motion"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
+import { LogoMark } from "@/components/brand/LogoMark"
+import { useAuthStore } from "@/store/authStore"
 import type { ChatMessage, SourceChunk } from "@/types/api"
 import { cn } from "@/lib/utils"
 
@@ -17,26 +19,23 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === "user"
   const isStreaming = message.isStreaming
   const sources = message.sources ?? []
-  const reduceMotion = useReducedMotion()
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 12, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className={cn("group flex gap-3 px-4 py-3", isUser && "flex-row-reverse")}
+      className={cn("group flex gap-3 py-3", isUser && "flex-row-reverse")}
     >
-      {/* Avatar */}
       <Avatar role={message.role} />
 
-      <div className={cn("flex flex-col gap-2 max-w-[72%]", isUser && "items-end")}>
-        {/* Bubble */}
+      <div className={cn("flex max-w-[78%] flex-col gap-2", isUser && "items-end")}>
         <div
           className={cn(
-            "relative rounded-[22px] px-4 py-3 text-sm leading-relaxed shadow-[0_18px_45px_rgba(2,6,23,0.18)]",
+            "relative rounded-[24px] px-4 py-3 text-sm leading-7 shadow-[0_18px_45px_rgba(10,10,10,0.05)]",
             isUser
-              ? "bg-[linear-gradient(135deg,#D4AF37,#fbbf24)] text-slate-950 rounded-tr-sm font-medium"
-              : "border border-[#F8F9FA]/8 bg-[linear-gradient(180deg,rgba(19,27,46,0.95),rgba(11,18,31,0.9))] text-slate-100 rounded-tl-sm",
+              ? "rounded-tr-md bg-[linear-gradient(135deg,#D69B3C,#FF8C35)] text-white"
+              : "rounded-tl-md border border-black/5 bg-white text-[#374151] dark:border-[#F8F9FA]/8 dark:bg-[#111827] dark:text-[#E5E7EB]",
           )}
         >
           {isUser ? (
@@ -45,24 +44,20 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             <MarkdownContent content={message.content} />
           )}
 
-          {/* Streaming cursor */}
           {isStreaming && (
-            <span className="inline-block w-0.5 h-4 bg-amber-400 ml-0.5 animate-pulse align-middle" />
+            <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-[#C5A059] align-middle" />
           )}
         </div>
 
-        {/* Citations */}
         {!isUser && sources.length > 0 && (
           <CitationRow sources={sources} />
         )}
 
-        {/* Confidence score */}
         {!isUser && !isStreaming && message.confidence_score != null && (
           <ConfidencePill score={message.confidence_score} />
         )}
 
-        {/* Timestamp */}
-        <span className="text-[10px] text-slate-600 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="px-1 text-[10px] text-[#9CA3AF] opacity-0 transition-opacity group-hover:opacity-100 dark:text-[#71717A]">
           {formatTime(message.created_at)}
         </span>
       </div>
@@ -73,16 +68,25 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 // ── Avatar ────────────────────────────────────────────────────────────────────
 
 function Avatar({ role }: { role: string }) {
+  const user = useAuthStore((state) => state.user)
+  const label = getInitial(getUserBadgeValue(user?.email, user?._id, user?.id, user?.first_name) ?? "U")
+
+  if (role !== "user") {
+    return (
+      <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center">
+        <LogoMark className="h-8 w-8 rounded-2xl shadow-[0_12px_30px_rgba(255,107,53,0.16)]" />
+      </div>
+    )
+  }
+
   return (
     <div
       className={cn(
-        "mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-2xl text-[11px] font-bold shadow-[0_12px_30px_rgba(2,6,23,0.25)]",
-        role === "user"
-          ? "bg-[linear-gradient(135deg,#D4AF37,#fde68a)] text-slate-950"
-          : "border border-[#F8F9FA]/8 bg-[linear-gradient(180deg,rgba(26,35,58,0.96),rgba(11,18,31,0.94))] text-amber-300",
+        "mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-2xl text-[11px] font-bold shadow-[0_12px_30px_rgba(10,10,10,0.10)]",
+        "bg-[rgba(212,175,55,0.14)] text-[#C5A059]",
       )}
     >
-      {role === "user" ? "U" : "N"}
+      {label}
     </div>
   )
 }
@@ -93,9 +97,8 @@ function MarkdownContent({ content }: { content: string }) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
-      className="prose prose-invert prose-sm max-w-none prose-p:my-1.5 prose-headings:text-slate-200 prose-a:text-amber-400 prose-code:text-amber-300 prose-pre:bg-transparent prose-pre:p-0"
+      className="prose prose-sm max-w-none text-[#475569] dark:prose-invert prose-p:my-1.5 prose-headings:text-[#18181B] dark:prose-headings:text-white prose-a:text-[#C5A059] prose-code:text-[#B8944E] prose-pre:bg-transparent prose-pre:p-0"
       components={{
-        // Inline code
         code({ className, children, ...props }: any) {
           const match = /language-(\w+)/.exec(className ?? "")
           const isBlock = !!match
@@ -103,7 +106,7 @@ function MarkdownContent({ content }: { content: string }) {
           if (!isBlock) {
             return (
               <code
-                className="bg-slate-700/60 text-amber-300 rounded px-1 py-0.5 text-[12px] font-mono"
+                className="rounded bg-[#F3F4F6] px-1 py-0.5 font-mono text-[12px] text-[#B8944E] dark:bg-[#1F2937]"
                 {...props}
               >
                 {children}
@@ -112,9 +115,9 @@ function MarkdownContent({ content }: { content: string }) {
           }
 
           return (
-            <div className="my-3 rounded-xl overflow-hidden border border-slate-700/60">
-              <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900/80 border-b border-slate-700/60">
-                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+            <div className="my-3 overflow-hidden rounded-xl border border-black/6 dark:border-[#F8F9FA]/8">
+              <div className="flex items-center justify-between border-b border-black/6 bg-[#111827] px-3 py-1.5 dark:border-[#F8F9FA]/8">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
                   {match[1]}
                 </span>
                 <CopyButton text={String(children)} />
@@ -130,7 +133,6 @@ function MarkdownContent({ content }: { content: string }) {
             </div>
           )
         },
-        // Citation markers [1], [2] become styled chips
         p({ children, ...props }: any) {
           return <p className="my-1.5 leading-relaxed" {...props}>{children}</p>
         },
@@ -161,33 +163,33 @@ function CitationChip({ source, index }: { source: SourceChunk; index: number })
       <button
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex items-center gap-1.5 text-[11px] rounded-lg px-2 py-1 border transition-all",
-          "bg-slate-950/60 border-[#F8F9FA]/8 text-slate-400 hover:border-amber-500/40 hover:text-amber-400",
-          open && "border-amber-500/40 text-amber-400 bg-slate-950",
+          "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] transition-all",
+          "border-black/5 bg-white text-[#6B7280] hover:border-[#E7C9B4] hover:text-[#B8944E] dark:border-[#F8F9FA]/8 dark:bg-[#0F172A] dark:text-[#D1D5DB]",
+          open && "border-[#E7C9B4] text-[#B8944E]",
         )}
       >
-        <span className="w-3.5 h-3.5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold" style={{ fontSize: 9 }}>
+        <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[rgba(212,175,55,0.10)] font-bold text-[#B8944E]" style={{ fontSize: 9 }}>
           {index}
         </span>
         <span className="truncate max-w-[140px]">{source.document_filename}</span>
         {source.page_number != null && (
-          <span className="text-slate-600">p.{source.page_number}</span>
+          <span className="text-[#9CA3AF]">p.{source.page_number}</span>
         )}
-        <span className="text-slate-600 text-[10px]">{(source.score * 100).toFixed(0)}%</span>
+        <span className="text-[10px] text-[#9CA3AF]">{(source.score * 100).toFixed(0)}%</span>
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 z-50 mb-1.5 w-72 rounded-2xl border border-[#F8F9FA]/8 bg-[linear-gradient(180deg,rgba(9,14,26,0.98),rgba(6,10,18,0.98))] p-3 shadow-2xl shadow-black/60">
-          <p className="text-[11px] text-amber-400 font-medium mb-1.5 truncate">
+        <div className="absolute bottom-full left-0 z-50 mb-1.5 w-72 rounded-[22px] border border-black/6 bg-white p-3 shadow-[0_24px_54px_rgba(10,10,10,0.12)] dark:border-[#F8F9FA]/8 dark:bg-[#111827]">
+          <p className="mb-1.5 truncate text-[11px] font-medium text-[#B8944E]">
             {source.document_filename}
             {source.page_number != null && ` — Page ${source.page_number}`}
           </p>
-          <p className="text-[12px] text-slate-300 leading-relaxed line-clamp-6">
+          <p className="line-clamp-6 text-[12px] leading-relaxed text-[#4B5563] dark:text-[#D1D5DB]">
             {source.content}
           </p>
-          <div className="mt-2 pt-2 border-t border-slate-700/50 flex items-center justify-between">
-            <span className="text-[10px] text-slate-600">Chunk #{source.chunk_index}</span>
-            <span className="text-[10px] text-amber-500">{(source.score * 100).toFixed(1)}% match</span>
+          <div className="mt-2 flex items-center justify-between border-t border-black/6 pt-2 dark:border-[#F8F9FA]/8">
+            <span className="text-[10px] text-[#9CA3AF]">Chunk #{source.chunk_index}</span>
+            <span className="text-[10px] text-[#B8944E]">{(source.score * 100).toFixed(1)}% match</span>
           </div>
         </div>
       )}
@@ -200,12 +202,12 @@ function CitationChip({ source, index }: { source: SourceChunk; index: number })
 function ConfidencePill({ score }: { score: number }) {
   const pct = Math.round(score * 100)
   const color =
-    pct >= 80 ? "text-emerald-300 border-emerald-500/24 bg-emerald-500/8"
-    : pct >= 60 ? "text-amber-300 border-amber-500/24 bg-amber-500/8"
-    : "text-red-300 border-red-500/24 bg-red-500/8"
+    pct >= 80 ? "border-[#7CB69E]/28 bg-[#EDF5F1] text-[#2F6F58]"
+    : pct >= 60 ? "border-[#E7C9B4] bg-[rgba(212,175,55,0.08)] text-[#B8944E]"
+    : "border-[#F3C3B5] bg-[#FFF5F2] text-[#D14E2C]"
 
   return (
-    <div className={cn("flex items-center gap-1 text-[10px] rounded-full px-2.5 py-1 border", color)}>
+    <div className={cn("flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px]", color)}>
       <span className="w-1 h-1 rounded-full bg-current" />
       <span>{pct}% confidence</span>
     </div>
@@ -224,14 +226,12 @@ function CopyButton({ text }: { text: string }) {
         setCopied(true)
         setTimeout(() => setCopied(false), 1500)
       }}
-      className="text-[10px] text-slate-500 hover:text-slate-300 transition-colors"
+      className="text-[10px] text-slate-400 transition-colors hover:text-white"
     >
       {copied ? "Copied!" : "Copy"}
     </button>
   )
 }
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function formatTime(iso: string): string {
   try {
@@ -241,4 +241,18 @@ function formatTime(iso: string): string {
   } catch {
     return ""
   }
+}
+
+function getInitial(value: string) {
+  return value.trim().charAt(0).toUpperCase()
+}
+
+function getUserBadgeValue(...values: Array<string | null | undefined>) {
+  for (const value of values) {
+    const normalized = value?.trim()
+    if (!normalized) continue
+    if (normalized.toLowerCase() === "user@nexusai.com") continue
+    return normalized
+  }
+  return null
 }

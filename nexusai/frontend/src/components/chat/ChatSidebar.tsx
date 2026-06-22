@@ -1,7 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
+import { Building2, Clock3, MessageSquarePlus, Moon, Search, Sun, Trash2 } from "lucide-react"
+import { useTheme } from "next-themes"
+import { LogoMark } from "@/components/brand/LogoMark"
 import { useChatStore } from "@/store/chatStore"
+import { useAuthStore } from "@/store/authStore"
 import { cn } from "@/lib/utils"
 
 interface ChatSidebarProps {
@@ -14,14 +18,18 @@ export function ChatSidebar({ className }: ChatSidebarProps) {
     activeSessionId,
     setActiveSession,
     removeSession,
-    reset,
   } = useChatStore()
+  const user = useAuthStore((state) => state.user)
+  const workspace = useAuthStore((state) => state.workspace)
+  const sessionChecked = useAuthStore((state) => state.sessionChecked)
+  const isLoading = useAuthStore((state) => state.isLoading)
+  const { resolvedTheme, setTheme } = useTheme()
 
   const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const [query, setQuery] = useState("")
 
   const handleNewChat = () => {
     setActiveSession(null)
-    // Clear messages for a fresh conversation
     useChatStore.setState({ messages: [], activeSessionId: null })
   }
 
@@ -29,14 +37,26 @@ export function ChatSidebar({ className }: ChatSidebarProps) {
   const today = new Date().toDateString()
   const yesterday = new Date(Date.now() - 86400000).toDateString()
 
-  const groups: { label: string; items: typeof sessions }[] = []
-  const todayItems = sessions.filter(
+  const visibleSessions = useMemo(() => {
+    const normalized = query.trim().toLowerCase()
+    if (!normalized) return sessions
+    return sessions.filter((session) => {
+      const modeLabel = session.mode === "support" ? "support" : "document"
+      return (
+        session.title.toLowerCase().includes(normalized) ||
+        modeLabel.includes(normalized)
+      )
+    })
+  }, [query, sessions])
+
+  const groups: { label: string; items: typeof visibleSessions }[] = []
+  const todayItems = visibleSessions.filter(
     (s) => new Date(s.updated_at).toDateString() === today,
   )
-  const yesterdayItems = sessions.filter(
+  const yesterdayItems = visibleSessions.filter(
     (s) => new Date(s.updated_at).toDateString() === yesterday,
   )
-  const olderItems = sessions.filter(
+  const olderItems = visibleSessions.filter(
     (s) =>
       new Date(s.updated_at).toDateString() !== today &&
       new Date(s.updated_at).toDateString() !== yesterday,
@@ -46,55 +66,70 @@ export function ChatSidebar({ className }: ChatSidebarProps) {
   if (yesterdayItems.length) groups.push({ label: "Yesterday", items: yesterdayItems })
   if (olderItems.length) groups.push({ label: "Earlier", items: olderItems })
 
+  const footerLabel =
+    getAccountLabel(user?.email, user?._id, user?.id) ||
+    workspace?.id ||
+    (sessionChecked && !isLoading ? "No active account" : "Checking session")
+
   return (
     <aside
       className={cn(
-        "flex flex-col h-full bg-slate-900/50 border-r border-slate-800/60",
+        "flex h-full flex-col rounded-3xl border border-border bg-bg-card shadow-sm",
         className,
       )}
     >
-      {/* Header */}
-      <div className="px-3 pt-4 pb-3 flex items-center gap-2">
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className="text-amber-400 text-base">⬡</span>
-          <span className="text-sm font-semibold text-slate-200 tracking-tight">NexusAI</span>
+      <div className="border-b border-border px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/10 text-accent shadow-sm">
+            <Building2 className="h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-text-secondary">Workspace chat</p>
+            <p className="truncate text-sm font-semibold text-text-primary">
+              {workspace?.name ?? "NexusAI workspace"}
+            </p>
+          </div>
         </div>
+      </div>
+
+      <div className="space-y-3 px-4 py-4">
         <button
           onClick={handleNewChat}
           title="New conversation"
-          className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-700/60 text-slate-400 hover:text-amber-400 hover:border-amber-500/40 transition-all"
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-accent text-white px-4 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5"
         >
-          <PlusIcon />
+          <MessageSquarePlus className="h-4 w-4" />
+          New conversation
         </button>
-      </div>
 
-      {/* Search (cosmetic for now) */}
-      <div className="px-3 mb-3">
-        <div className="flex items-center gap-2 bg-slate-800/60 border border-slate-700/40 rounded-xl px-3 py-2">
-          <SearchIcon />
+        <div className="flex items-center gap-2 rounded-2xl border border-border bg-bg-secondary px-3 py-2.5 shadow-sm">
+          <Search className="h-4 w-4 text-text-secondary" />
           <input
             type="text"
-            placeholder="Search chats…"
-            className="flex-1 bg-transparent text-[12px] text-slate-300 placeholder:text-slate-600 outline-none"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search conversations"
+            className="flex-1 bg-transparent text-[13px] text-text-primary outline-none placeholder:text-text-secondary"
           />
         </div>
       </div>
 
-      {/* Conversation list */}
-      <nav className="flex-1 overflow-y-auto px-2 space-y-3 pb-4" style={{ scrollbarWidth: "thin" }}>
+      <nav className="flex-1 space-y-4 overflow-y-auto px-3 pb-4" style={{ scrollbarWidth: "thin" }}>
         {groups.length === 0 && (
-          <p className="text-[11px] text-slate-600 text-center mt-8 px-3">
-            No conversations yet.
-            <br />Start a new chat above.
-          </p>
+          <div className="rounded-[22px] border border-dashed border-border bg-bg-secondary/50 px-4 py-10 text-center">
+            <p className="text-sm font-semibold text-text-primary">No conversations yet</p>
+            <p className="mt-1 text-xs leading-5 text-text-secondary">
+              Start a new chat to search documents or ask NexusAI support.
+            </p>
+          </div>
         )}
 
         {groups.map((group) => (
           <div key={group.label}>
-            <p className="text-[10px] font-medium text-slate-600 uppercase tracking-widest px-2 mb-1">
+            <p className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-text-secondary">
               {group.label}
             </p>
-            <div className="space-y-0.5">
+            <div className="space-y-2">
               {group.items.map((session) => (
                 <SessionRow
                   key={session.id}
@@ -111,15 +146,22 @@ export function ChatSidebar({ className }: ChatSidebarProps) {
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className="px-3 py-3 border-t border-slate-800/60">
-        <button className="w-full flex items-center gap-2.5 text-[12px] text-slate-500 hover:text-slate-300 rounded-xl px-2 py-2 hover:bg-slate-800/40 transition-all">
-          <span className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">
-            U
+      <div className="border-t border-border px-4 py-4">
+        <div className="flex items-center gap-3 rounded-2xl border border-border bg-bg-secondary px-3 py-2.5 shadow-sm">
+          <LogoMark className="h-8 w-8 rounded-full shadow-sm" />
+          <span className="min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
+            {footerLabel}
           </span>
-          <span className="flex-1 text-left truncate">user@nexusai.com</span>
-          <SettingsIcon />
-        </button>
+          <button
+            type="button"
+            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            className="rounded-full p-2 text-text-secondary transition-colors hover:bg-bg-card hover:text-text-primary"
+            aria-label="Toggle theme"
+            title={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {resolvedTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+        </div>
       </div>
     </aside>
   )
@@ -128,7 +170,7 @@ export function ChatSidebar({ className }: ChatSidebarProps) {
 // ── Session row ───────────────────────────────────────────────────────────────
 
 interface SessionRowProps {
-  session: { id: string; title: string; updated_at: string }
+  session: { id: string; title: string; updated_at: string; mode?: string; messages?: Array<unknown> }
   isActive: boolean
   isHovered: boolean
   onHover: (id: string | null) => void
@@ -140,10 +182,10 @@ function SessionRow({ session, isActive, isHovered, onHover, onSelect, onDelete 
   return (
     <div
       className={cn(
-        "group relative flex items-center gap-2 rounded-xl px-2.5 py-2 cursor-pointer transition-all",
+        "group relative cursor-pointer rounded-[22px] border px-3.5 py-3 transition-all",
         isActive
-          ? "bg-amber-500/10 border border-amber-500/20"
-          : "hover:bg-slate-800/50 border border-transparent",
+          ? "border-accent/40 bg-accent/10 shadow-sm"
+          : "border-transparent hover:border-accent/20 hover:bg-accent/5",
       )}
       onMouseEnter={() => onHover(session.id)}
       onMouseLeave={() => onHover(null)}
@@ -152,40 +194,60 @@ function SessionRow({ session, isActive, isHovered, onHover, onSelect, onDelete 
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onSelect()}
     >
-      <span className="text-slate-600 text-[11px] flex-shrink-0">
-        {isActive ? "▸" : "·"}
-      </span>
-      <span
-        className={cn(
-          "flex-1 text-[12px] truncate leading-snug",
-          isActive ? "text-amber-300" : "text-slate-400",
-        )}
-      >
-        {session.title || "Untitled conversation"}
-      </span>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start justify-between gap-3">
+          <span
+            className={cn(
+              "line-clamp-2 text-[13px] font-semibold leading-5",
+              isActive ? "text-text-primary" : "text-text-secondary group-hover:text-text-primary",
+            )}
+          >
+            {session.title || "Untitled conversation"}
+          </span>
+          <span className="mt-0.5 inline-flex flex-shrink-0 rounded-full border border-border bg-bg-card px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+            {session.mode === "support" ? "Support" : "Docs"}
+          </span>
+        </div>
+        <div className="mt-2 flex items-center gap-2 text-[11px] text-text-secondary">
+          <Clock3 className="h-3.5 w-3.5" />
+          <span>{formatRelativeTime(session.updated_at)}</span>
+          <span>•</span>
+          <span>{session.messages?.length ?? 0} messages</span>
+        </div>
+      </div>
 
-      {/* Delete button — visible on hover */}
       {isHovered && (
         <button
           onClick={(e) => {
             e.stopPropagation()
             onDelete()
           }}
-          className="w-5 h-5 flex-shrink-0 flex items-center justify-center text-slate-600 hover:text-red-400 rounded transition-colors"
+          className="absolute right-3 top-3 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl text-text-secondary transition-colors hover:bg-bg-card hover:text-red-500"
           aria-label="Delete conversation"
         >
-          <TrashIcon />
+          <Trash2 className="h-4 w-4" />
         </button>
       )}
     </div>
   )
 }
 
-// ── Icons ─────────────────────────────────────────────────────────────────────
+function formatRelativeTime(value: string) {
+  const timestamp = new Date(value).getTime()
+  if (Number.isNaN(timestamp)) return "Recently"
+  const diffMinutes = Math.max(1, Math.round((Date.now() - timestamp) / 60000))
+  if (diffMinutes < 60) return `${diffMinutes}m ago`
+  const diffHours = Math.round(diffMinutes / 60)
+  if (diffHours < 24) return `${diffHours}h ago`
+  return `${Math.round(diffHours / 24)}d ago`
+}
 
-const iconProps = { width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round" as const, strokeLinejoin: "round" as const }
-
-const PlusIcon = () => <svg {...iconProps}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-const SearchIcon = () => <svg {...{ ...iconProps, width: 12, height: 12, stroke: "#64748b" }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-const SettingsIcon = () => <svg {...{ ...iconProps, width: 13, height: 13 }}><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M18.66 5.34l1.41-1.41"/></svg>
-const TrashIcon = () => <svg {...{ ...iconProps, width: 12, height: 12 }}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6m4-6v6"/></svg>
+function getAccountLabel(...values: Array<string | null | undefined>) {
+  for (const value of values) {
+    const normalized = value?.trim()
+    if (!normalized) continue
+    if (normalized.toLowerCase() === "user@nexusai.com") continue
+    return normalized
+  }
+  return null
+}

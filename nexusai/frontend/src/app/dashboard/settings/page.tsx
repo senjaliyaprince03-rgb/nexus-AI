@@ -1,16 +1,45 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
-import { Shield, Key, Activity, ArrowRight, CreditCard, Copy, Check } from "lucide-react"
+import { Shield, Key, Activity, ArrowRight, CreditCard, Copy, Check, ChevronDown, Globe, Monitor, Moon, Sparkles, Sun } from "lucide-react"
 import { toast } from "sonner"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { api } from "@/lib/api"
 import { useAuth } from "@/hooks/useAuth"
+import { useTheme } from "next-themes"
+import { ThemeGallery } from "@/components/settings/ThemeGallery"
+import { THEMES } from "@/lib/themeData"
+import { useI18n } from "@/lib/i18n"
+import { useI18nStore } from "@/store/i18nStore"
+import { usePreferencesStore } from "@/store/preferencesStore"
+import type { Language } from "@/locales/translations"
 
 type Tab = "general" | "security" | "api"
 type ApiKey = { id: string; name: string; masked_key: string; created_at: string; is_active: boolean }
+
+type PreferenceOption = {
+  value: string
+  label: string
+  description?: string
+  icon?: "monitor" | "sun" | "moon" | "globe" | "sparkles"
+  flagCountry?: string
+}
+
+const languageOptions: PreferenceOption[] = [
+  { value: "en", label: "English (US)", description: "United States", flagCountry: "us" },
+  { value: "es", label: "Spanish (ES)", description: "Espana", flagCountry: "es" },
+  { value: "fr", label: "French (FR)", description: "France", flagCountry: "fr" },
+  { value: "de", label: "German (DE)", description: "Deutschland", flagCountry: "de" },
+]
+
+function getThemeLabel(themeId: string, t: ReturnType<typeof useI18n>["t"]) {
+  if (themeId === "system") return t("settings.theme.auto")
+  if (themeId === "light") return t("settings.theme.light")
+  if (themeId === "dark") return t("settings.theme.dark")
+  return THEMES.find((theme) => theme.id === themeId)?.name || "System Default"
+}
 
 export default function SettingsPage() {
   const [tab, setTab] = useState<Tab>("general")
@@ -26,7 +55,17 @@ export default function SettingsPage() {
   const [backupCodes, setBackupCodes] = useState<string[]>([])
   
   const { user, refreshUser } = useAuth()
+  const { theme, setTheme } = useTheme()
+  const { t, language, mounted: translationsMounted } = useI18n()
+  const setLanguage = useI18nStore((state) => state.setLanguage)
+  const telemetryEnabled = usePreferencesStore((state) => state.telemetryEnabled)
+  const setTelemetryEnabled = usePreferencesStore((state) => state.setTelemetryEnabled)
   const queryClient = useQueryClient()
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const { data: keysResponse, isLoading: isLoadingKeys } = useQuery({
     queryKey: ["api-keys"],
@@ -112,13 +151,41 @@ export default function SettingsPage() {
     changePassword.mutate()
   }
 
+  const themeOptions = useMemo<PreferenceOption[]>(
+    () =>
+      THEMES.map((themeOption) => ({
+        value: themeOption.id,
+        label: getThemeLabel(themeOption.id, t),
+        description:
+          themeOption.id === "system"
+            ? getThemeLabel("system", t)
+            : themeOption.id === "light"
+              ? getThemeLabel("light", t)
+              : themeOption.id === "dark"
+                ? getThemeLabel("dark", t)
+                : "Premium dashboard theme",
+        icon:
+          themeOption.id === "system"
+            ? "monitor"
+            : themeOption.id === "light"
+              ? "sun"
+              : themeOption.id === "dark"
+                ? "moon"
+                : "sparkles",
+      })),
+    [t]
+  )
+
+  const activeTheme = isMounted ? theme || "system" : "system"
+  const activeThemeName = themeOptions.find((option) => option.value === activeTheme)?.label || getThemeLabel("system", t)
+
   return (
     <div className="max-w-5xl mx-auto p-4 sm:p-8">
       <div className="mb-8">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Settings</p>
-        <h1 className="text-3xl font-display tracking-tight text-[#18181B] dark:text-[#F8F9FA]">Application Preferences</h1>
+        <p className="text-[11px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">{t("settings.page.kicker")}</p>
+        <h1 className="text-3xl font-display tracking-tight text-[#18181B] dark:text-[#F8F9FA]">{t("settings.page.title")}</h1>
         <p className="mt-2 text-sm text-[#4B5563] dark:text-[#A1A1AA]">
-          Manage your subscription, security protocols, and integration keys.
+          {t("settings.page.subtitle")}
         </p>
       </div>
 
@@ -132,25 +199,31 @@ export default function SettingsPage() {
             <CreditCard className="w-4 h-4 text-[#C5A059]" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA]">Plans & Billing</p>
-            <p className="text-xs text-[#9CA3AF] dark:text-[#A1A1AA]">Manage your subscription, usage and invoices</p>
+            <p className="text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA]">{t("settings.billing.title")}</p>
+            <p className="text-xs text-[#9CA3AF] dark:text-[#A1A1AA]">{t("settings.billing.subtitle")}</p>
           </div>
         </div>
         <ArrowRight className="w-4 h-4 text-[#C5A059] group-hover:translate-x-1 transition-transform duration-200" />
       </Link>
 
       <div className="mb-8 flex w-fit gap-2 border-b border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]">
-        {(["general", "security", "api"] as Tab[]).map((t) => (
-          <button key={t} onClick={() => setTab(t)}
+        {(["general", "security", "api"] as Tab[]).map((tabName) => (
+          <button key={tabName} onClick={() => setTab(tabName)}
             className={cn("px-4 py-3 text-sm capitalize transition-all border-b-2 font-medium flex items-center gap-2",
-              tab === t
+              tab === tabName
                 ? "border-[#C5A059] text-[#C5A059]"
                 : "border-transparent text-[#9CA3AF] hover:text-[#18181B] dark:hover:text-[#F8F9FA] hover:border-[rgba(0,0,0,0.1)] dark:hover:border-[rgba(255,255,255,0.1)]"
             )}>
-            {t === "general" && <Activity className="w-4 h-4" />}
-            {t === "security" && <Shield className="w-4 h-4" />}
-            {t === "api" && <Key className="w-4 h-4" />}
-            {t}
+            {tabName === "general" && <Activity className="w-4 h-4" />}
+            {tabName === "security" && <Shield className="w-4 h-4" />}
+            {tabName === "api" && <Key className="w-4 h-4" />}
+            {translationsMounted
+              ? tabName === "general"
+                ? t("settings.tabs.general")
+                : tabName === "security"
+                  ? t("settings.tabs.security")
+                  : t("settings.tabs.api")
+              : tabName}
           </button>
         ))}
       </div>
@@ -158,21 +231,70 @@ export default function SettingsPage() {
       <div className="bg-white dark:bg-[#18181A] rounded-3xl border border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] shadow-sm overflow-hidden">
         {tab === "general" && (
           <div className="divide-y divide-[rgba(0,0,0,0.06)]">
-            <Section title="Display & Theme">
+            <Section title={t("settings.title.display")}>
               <div className="grid gap-6 max-w-xl">
-                <Field label="System Theme" type="text" value="System Default (Auto)" disabled />
-                <Field label="Language" type="text" value="English (US)" disabled />
+                <PreferenceSelect
+                  label={t("settings.field.theme")}
+                  value={activeTheme}
+                  options={themeOptions}
+                  onChange={(nextTheme) => setTheme(nextTheme)}
+                />
+                <PreferenceSelect
+                  label={t("settings.field.language")}
+                  value={language}
+                  options={languageOptions}
+                  onChange={(nextLanguage) => setLanguage(nextLanguage as Language)}
+                />
+              </div>
+              <div className="mt-8 rounded-[28px] border border-[rgba(0,0,0,0.08)] bg-[#FCFCFD] p-5 dark:border-[rgba(255,255,255,0.08)] dark:bg-[#111112]">
+                <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA]">{t("settings.theme.library.title")}</p>
+                    <p className="mt-1 text-xs text-[#9CA3AF] dark:text-[#A1A1AA]">
+                      {t("settings.theme.library.subtitle")}
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(212,175,55,0.25)] bg-[rgba(212,175,55,0.08)] px-3 py-1.5 text-[11px] font-semibold text-[#C5A059]">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    {activeThemeName}
+                  </span>
+                </div>
+                <ThemeGallery />
               </div>
             </Section>
-            <Section title="Data & Privacy">
-              <div className="flex items-center justify-between p-4 bg-[#F8F9FA] rounded-2xl border border-[rgba(0,0,0,0.08)] max-w-xl">
-                 <div>
-                   <p className="text-sm font-semibold text-[#18181B]">Data Collection</p>
-                   <p className="text-xs text-[#9CA3AF] mt-1">Allow anonymous usage telemetry to improve NexusAI.</p>
-                 </div>
-                 <div className="w-10 h-6 bg-[#C5A059] rounded-full relative cursor-pointer shadow-inner">
-                   <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
-                 </div>
+            <Section title={t("settings.title.privacy")}>
+              <div className="max-w-xl">
+                <div className="flex items-center justify-between gap-4 rounded-2xl border border-[rgba(0,0,0,0.08)] bg-[#F8F9FA] p-4 dark:border-[rgba(255,255,255,0.08)] dark:bg-[#101114]">
+                  <div>
+                    <p className="text-sm font-semibold text-[#18181B] dark:text-[#F8F9FA]">
+                      {t("settings.privacy.collection")}
+                    </p>
+                    <p className="mt-1 text-xs text-[#9CA3AF] dark:text-[#A1A1AA]">
+                      {t("settings.privacy.desc")}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    aria-pressed={telemetryEnabled}
+                    onClick={() => setTelemetryEnabled(!telemetryEnabled)}
+                    className={cn(
+                      "relative inline-flex h-7 w-12 flex-shrink-0 rounded-full border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-[#18181A]",
+                      telemetryEnabled
+                        ? "border-[#C5A059] bg-[#C5A059]"
+                        : "border-[rgba(0,0,0,0.08)] bg-white dark:border-[rgba(255,255,255,0.14)] dark:bg-[#202124]"
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-all duration-200",
+                        telemetryEnabled ? "left-6" : "left-1"
+                      )}
+                    />
+                  </button>
+                </div>
+                <p className="mt-3 text-xs text-[#9CA3AF] dark:text-[#A1A1AA]">
+                  {t("settings.privacy.persist")}
+                </p>
               </div>
             </Section>
           </div>
@@ -431,6 +553,118 @@ function Field({ label, hint, ...props }: React.InputHTMLAttributes<HTMLInputEle
       />
       {hint && <p className="text-xs text-[#9CA3AF] mt-2">{hint}</p>}
     </div>
+  )
+}
+
+function PreferenceSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string
+  value: string
+  options: PreferenceOption[]
+  onChange: (value: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const selectedOption = options.find((option) => option.value === value) || options[0]
+
+  useEffect(() => {
+    function handlePointerDown(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handlePointerDown)
+    return () => document.removeEventListener("mousedown", handlePointerDown)
+  }, [])
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <label className="mb-2 block text-xs font-bold text-[#4B5563] dark:text-[#D4D4D8]">{label}</label>
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        className="flex w-full items-center justify-between rounded-xl border border-[rgba(0,0,0,0.08)] bg-[#F8F9FA] px-4 py-3 text-left transition-all hover:border-[#C5A059]/50 dark:border-[rgba(255,255,255,0.08)] dark:bg-[#111214]"
+      >
+        <div className="flex min-w-0 items-center gap-3">
+          <PreferenceLeading option={selectedOption} />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-[#18181B] dark:text-[#F8F9FA]">{selectedOption.label}</p>
+            {selectedOption.description && (
+              <p className="truncate text-xs text-[#9CA3AF] dark:text-[#A1A1AA]">{selectedOption.description}</p>
+            )}
+          </div>
+        </div>
+        <ChevronDown className={cn("h-4 w-4 flex-shrink-0 text-[#9CA3AF] transition-transform", open && "rotate-180")} />
+      </button>
+
+      {open && (
+        <div className="absolute z-30 mt-2 w-full overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] bg-white shadow-[0_12px_36px_rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[#18181A]">
+          {options.map((option) => {
+            const selected = option.value === value
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  onChange(option.value)
+                  setOpen(false)
+                }}
+                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-[#F8F9FA] dark:hover:bg-[#222326]"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <PreferenceLeading option={option} />
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-[#18181B] dark:text-[#F8F9FA]">{option.label}</p>
+                    {option.description && (
+                      <p className="truncate text-xs text-[#9CA3AF] dark:text-[#A1A1AA]">{option.description}</p>
+                    )}
+                  </div>
+                </div>
+                {selected && <Check className="h-4 w-4 flex-shrink-0 text-[#C5A059]" />}
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PreferenceLeading({ option }: { option: PreferenceOption }) {
+  if (option.flagCountry) {
+    return (
+      <span className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-full border border-[rgba(0,0,0,0.08)] bg-white shadow-sm dark:border-[rgba(255,255,255,0.12)]">
+        <Image
+          src={`https://flagcdn.com/w40/${option.flagCountry}.png`}
+          alt={option.label}
+          fill
+          className="object-cover"
+          unoptimized
+        />
+      </span>
+    )
+  }
+
+  const iconClassName = "h-4 w-4"
+  const icon = option.icon === "sun"
+    ? <Sun className={iconClassName} />
+    : option.icon === "moon"
+      ? <Moon className={iconClassName} />
+      : option.icon === "monitor"
+        ? <Monitor className={iconClassName} />
+        : option.icon === "sparkles"
+          ? <Sparkles className={iconClassName} />
+          : <Globe className={iconClassName} />
+
+  return (
+    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(212,175,55,0.1)] text-[#C5A059] dark:bg-[rgba(212,175,55,0.12)]">
+      {icon}
+    </span>
   )
 }
 

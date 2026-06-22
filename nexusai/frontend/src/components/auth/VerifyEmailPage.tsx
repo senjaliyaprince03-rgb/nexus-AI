@@ -137,9 +137,7 @@ function VerifyEmailContent() {
         </div>
 
         <Link href="/" className="mb-10 inline-flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#C5A059] to-[#FF8F5E] text-white shadow-[0_8px_16px_rgba(255,107,53,0.25)]">
-            <LogoMark className="h-5 w-5 rounded-md shadow-none" />
-          </span>
+          <LogoMark className="w-10 h-10 rounded-xl" />
           <span className="font-display text-2xl font-bold tracking-tight text-[#18181B]">NexusAI</span>
         </Link>
 

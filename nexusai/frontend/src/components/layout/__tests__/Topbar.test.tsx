@@ -5,12 +5,13 @@ import { Topbar } from "@/components/layout/Topbar"
 import { useNotificationStore } from "@/store/notificationStore"
 
 vi.mock("next-themes", () => ({
-  useTheme: () => ({ theme: "light", setTheme: vi.fn() }),
+  useTheme: () => ({ theme: "light", resolvedTheme: "light", setTheme: vi.fn() }),
 }))
 
 vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({
     user: {
+      id: "6a38db43a8ee0fb2fa4c6fd3",
       first_name: "Mock",
       last_name: "User",
       email: "mock-user@nexusai.dev",
@@ -24,6 +25,28 @@ vi.mock("@/hooks/useAuth", () => ({
 
 vi.mock("@/components/brand/LogoMark", () => ({
   LogoMark: () => <div data-testid="logo-mark" />,
+}))
+
+vi.mock("@/lib/i18n", () => ({
+  useI18n: () => ({
+    t: (key: string) =>
+      ({
+        controlRoom: "CONTROL ROOM",
+        chatActive: "Chat Active",
+        account: "Account",
+        noSession: "No session",
+        checkingSession: "Checking session...",
+        notifications: "Notifications",
+        noUnread: "No unread",
+        markAllAsRead: "Mark all as read",
+        allCaughtUp: "All caught up",
+        newUpdates: "New updates will appear here as they arrive.",
+        signOut: "Sign out",
+        admin: "Admin",
+      }[key] ?? key),
+    language: "en",
+    setLanguage: vi.fn(),
+  }),
 }))
 
 describe("Topbar notifications", () => {
