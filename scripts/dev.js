@@ -152,11 +152,18 @@ function safeSpawn(name, cmd, args, options) {
     }
   }
 
-  const child = spawn(cmd, args, {
-    ...options,
-    shell: false,
-    windowsHide: true
-  });
+  let child;
+  try {
+    child = spawn(cmd, args, {
+      ...options,
+      shell: false,
+      windowsHide: true
+    });
+  } catch (err) {
+    console.error(`[safeSpawn] FATAL ERROR for ${name}:`, err.message);
+    console.error(`[safeSpawn] cmd: ${cmd}, args: ${JSON.stringify(args)}, cwd: ${options.cwd}`);
+    throw err;
+  }
 
   child.on('error', (err) => {
     // Silently handle missing commands (e.g. streamlit not installed)

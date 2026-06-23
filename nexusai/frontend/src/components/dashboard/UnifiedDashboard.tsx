@@ -235,7 +235,7 @@ export function UnifiedDashboard({ overview, apiState }: UnifiedDashboardProps) 
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div>
                   <h1 className="font-display text-[2.6rem] leading-none tracking-tight text-[#18181B] dark:text-[#F8F9FA] sm:text-[3.4rem]">
-                    Unified Command Center
+                    NexusAI Command Center
                   </h1>
                   <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[#374151] dark:text-[#D1D5DB]">
                     One dashboard for documents, cited chat, support, analytics, specialist agents, and every integrated NexusAI module.

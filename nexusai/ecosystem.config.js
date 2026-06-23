@@ -33,13 +33,14 @@ module.exports = {
     {
       name: "nexusai-agents-ui",
       cwd: "../apps/nexus-agents/nexus-frontend",
-      script: "node_modules/next/dist/bin/next",
-      args: "dev -H 0.0.0.0 -p 12001",
+      script: "node",
+      args: ".next/standalone/server.js",
       env: {
         NODE_ENV: "production",
         NEXT_PUBLIC_API_HOST: "127.0.0.1",
         NEXT_PUBLIC_API_PORT: "12000",
-        HOSTNAME: "127.0.0.1"
+        HOSTNAME: "127.0.0.1",
+        PORT: 12001
       }
     }
   ]

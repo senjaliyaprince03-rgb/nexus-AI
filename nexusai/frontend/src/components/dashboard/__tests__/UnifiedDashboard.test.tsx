@@ -91,7 +91,7 @@ describe("UnifiedDashboard", () => {
   it("renders the command center and integrated project cards", () => {
     render(<UnifiedDashboard overview={overview} apiState={{ status: "live" }} />)
 
-    expect(screen.getByText("Unified Command Center")).toBeTruthy()
+    expect(screen.getByText("NexusAI Command Center")).toBeTruthy()
     expect(screen.getAllByText("Personal NexusAi Core").length).toBeGreaterThan(0)
     expect(screen.getAllByText("Nexus Agents Deep Research").length).toBeGreaterThan(0)
     expect(screen.getByText("Mapped modules")).toBeTruthy()

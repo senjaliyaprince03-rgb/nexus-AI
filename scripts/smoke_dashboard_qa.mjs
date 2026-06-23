@@ -89,7 +89,7 @@ await page.waitForTimeout(2500)
 const desktopScreenshot = screenshotPath("dashboard-desktop")
 await page.screenshot({ path: desktopScreenshot, fullPage: false, timeout: 10000 }).catch(() => {})
 
-const desktopTitleVisible = await page.getByText("Unified Command Center").isVisible()
+const desktopTitleVisible = await page.getByText("NexusAI Command Center").isVisible()
 const projectCards = await page.locator("article").count()
 const inlineBackendError = await page.getByText("Cannot reach the NexusAI API").isVisible().catch(() => false)
 const topology = await page.evaluate(() => {
